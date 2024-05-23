@@ -93,7 +93,7 @@ Deploy the application and its dependencies:
 
 ## License
 
-Copyright (C) 2015 - 2020 tevo authors | https://omega.gg/tevo
+Copyright (C) 2015 - 2024 tevo authors | https://omega.gg/tevo
 
 ### Authors
 
