@@ -1,0 +1,42 @@
+clone_folder: C:\dev\workspace\tevo
+
+environment:
+  matrix:
+    - qt: qt4
+      platform: win32
+      compiler: mingw
+
+    - qt: qt5
+      platform: win32
+      compiler: mingw
+
+    - qt: qt5
+      platform: win32
+      compiler: msvc
+
+    - qt: qt5
+      platform: win64
+      compiler: mingw
+
+    - qt: qt5
+      platform: win64
+      compiler: msvc
+
+    - qt: qt6
+      platform: win64
+      compiler: mingw
+
+    - qt: qt6
+      platform: win64
+      compiler: msvc
+
+build_script:
+  - sh environment.sh %compiler%
+  - sh environment.sh %qt%
+  - sh build.sh %platform% all
+  - cd deploy
+  - rm .gitignore
+  - 7z a ../tevo-%platform%-%qt%.zip *
+
+artifacts:
+  - path: tevo-%platform%-%qt%.zip

@@ -96,7 +96,7 @@ fi
 # MinGW
 #--------------------------------------------------------------------------------------------------
 
-echo "CONFIGURING clientVBML"
+echo "CONFIGURING tevo"
 
 if [ $compiler = "mingw" ]; then
 

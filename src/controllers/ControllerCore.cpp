@@ -63,7 +63,7 @@ ControllerCore::ControllerCore() : WController()
     //---------------------------------------------------------------------------------------------
     // Settings
 
-    sk->setName("clientVBML");
+    sk->setName("tevo");
 
     sk->setVersion(CORE_VERSION);
 
@@ -88,7 +88,7 @@ ControllerCore::ControllerCore() : WController()
     //---------------------------------------------------------------------------------------------
     // Usage
 
-    qDebug("clientVBML %s", sk->version().C_STR);
+    qDebug("tevo %s", sk->version().C_STR);
 
     if (argc != 2)
     {
@@ -136,7 +136,7 @@ ControllerCore::ControllerCore() : WController()
 
 bool ControllerCore::usage() const
 {
-    qDebug("Usage: clientVBML <url>");
+    qDebug("Usage: tevo <text>");
 
     return false;
 }
