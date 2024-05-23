@@ -23,8 +23,6 @@ jobs:
       sh build.sh win64 all
       cd deploy
       7z a ../tevo.zip *
-      cp ../test/*.sh .
-      sh all.sh
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-win64-qt5
 
