@@ -212,7 +212,8 @@ void ControllerCore::onIndexUpdated()
     // NOTE: We don't want this slot to be called again.
     disconnect(_index, 0, this, SLOT(onIndexUpdated()));
 
-    // FIXME libtorrent 2.0.9: For some reason, we need to wait before deleting the session.
+    // FIXME libtorrent 2.0.9: For some reason, we need to wait before deleting the session
+    //                         otherwise we get a crash.
     Sk::wait(100);
 
     QCoreApplication::exit(0);
