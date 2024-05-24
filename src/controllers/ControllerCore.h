@@ -60,7 +60,7 @@ private slots:
 private: // Variables
     QString _path;
 
-    QString _url;
+    QString _text;
 
     WBackendIndex * _index;
 

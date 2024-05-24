@@ -38,6 +38,13 @@
 W_INIT_CONTROLLER(ControllerCore)
 
 //-------------------------------------------------------------------------------------------------
+// Defines
+
+#ifdef QT_4
+#define qInfo qWarning
+#endif
+
+//-------------------------------------------------------------------------------------------------
 // Static variables
 
 static const QString CORE_VERSION = "1.0.0-0";
@@ -93,13 +100,13 @@ ControllerCore::ControllerCore() : WController()
         return false;
     }
 
-    _url = argv[1];
+    _text = argv[1];
 
     //wControllerFile->setVerbosity(QtInfoMsg);
 
     qInfo("tevo %s", sk->version().C_STR);
 
-    qInfo("url: %s", _url.C_STR);
+    qInfo("text: %s", _text.C_STR);
 
     //---------------------------------------------------------------------------------------------
     // Controllers
@@ -137,6 +144,8 @@ ControllerCore::ControllerCore() : WController()
     _player = new WPlayer;
 
     _player->setBackend(new WBackendTorrent);
+
+    _player->setOutput(WAbstractBackend::OutputAudio);
 
     return true;
 }
