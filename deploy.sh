@@ -84,6 +84,12 @@ fi
 echo ""
 
 #--------------------------------------------------------------------------------------------------
+# Bundle
+#--------------------------------------------------------------------------------------------------
+
+deploy="deploy"
+
+#--------------------------------------------------------------------------------------------------
 # Sky
 #--------------------------------------------------------------------------------------------------
 
@@ -106,29 +112,31 @@ if [ $os = "windows" ]; then
 
     if [ $compiler = "mingw" ]; then
 
-        cp "$path"/libgcc_s_*-1.dll    deploy
-        cp "$path"/libstdc++-6.dll     deploy
-        cp "$path"/libwinpthread-1.dll deploy
+        cp "$path"/libgcc_s_*-1.dll    $deploy
+        cp "$path"/libstdc++-6.dll     $deploy
+        cp "$path"/libwinpthread-1.dll $deploy
     fi
 
     if [ $qt = "qt4" ]; then
 
-        cp "$path"/QtCore4.dll        deploy
-        cp "$path"/QtNetwork4.dll     deploy
-        cp "$path"/QtScript4.dll      deploy
-        cp "$path"/QtXml4.dll         deploy
-        cp "$path"/QtXmlPatterns4.dll deploy
+        cp "$path"/QtCore4.dll        $deploy
+        cp "$path"/QtGui4.dll         $deploy
+        cp "$path"/QtNetwork4.dll     $deploy
+        cp "$path"/QtScript4.dll      $deploy
+        cp "$path"/QtXml4.dll         $deploy
+        cp "$path"/QtXmlPatterns4.dll $deploy
     else
-        cp "$path/$QtX"Core.dll    deploy
-        cp "$path/$QtX"Network.dll deploy
-        cp "$path/$QtX"Qml.dll     deploy
-        cp "$path/$QtX"Xml.dll     deploy
+        cp "$path/$QtX"Core.dll    $deploy
+        cp "$path/$QtX"Gui.dll     $deploy
+        cp "$path/$QtX"Network.dll $deploy
+        cp "$path/$QtX"Qml.dll     $deploy
+        cp "$path/$QtX"Xml.dll     $deploy
 
         if [ $qt = "qt5" ]; then
 
-            cp "$path/$QtX"XmlPatterns.dll deploy
+            cp "$path/$QtX"XmlPatterns.dll $deploy
         else
-            cp "$path/$QtX"Core5Compat.dll deploy
+            cp "$path/$QtX"Core5Compat.dll $deploy
         fi
     fi
 
@@ -137,18 +145,19 @@ elif [ $1 = "macOS" ]; then
     if [ $qt != "qt4" ]; then
 
         # FIXME Qt 5.14 macOS: We have to copy qt.conf to avoid a segfault.
-        cp "$path"/qt.conf deploy
+        cp "$path"/qt.conf $deploy
 
-        cp "$path"/QtCore.dylib    deploy
-        cp "$path"/QtNetwork.dylib deploy
-        cp "$path"/QtQml.dylib     deploy
-        cp "$path"/QtXml.dylib     deploy
+        cp "$path"/QtCore.dylib    $deploy
+        cp "$path"/QtGui.dylib     $deploy
+        cp "$path"/QtNetwork.dylib $deploy
+        cp "$path"/QtQml.dylib     $deploy
+        cp "$path"/QtXml.dylib     $deploy
 
         if [ $qt = "qt5" ]; then
 
-            cp "$path"/QtXmlPatterns.dylib deploy
+            cp "$path"/QtXmlPatterns.dylib $deploy
         else
-            cp "$path"/QtCore5Compat.dylib deploy
+            cp "$path"/QtCore5Compat.dylib $deploy
         fi
     fi
 
@@ -156,26 +165,28 @@ elif [ $1 = "linux" ]; then
 
     if [ $qt = "qt4" ]; then
 
-        cp "$path"/libQtCore.so.4        deploy
-        cp "$path"/libQtNetwork.so.4     deploy
-        cp "$path"/libQtScript.so.4      deploy
-        cp "$path"/libQtXml.so.4         deploy
-        cp "$path"/libQtXmlPatterns.so.4 deploy
+        cp "$path"/libQtCore.so.4        $deploy
+        cp "$path"/libQtGui.so.4         $deploy
+        cp "$path"/libQtNetwork.so.4     $deploy
+        cp "$path"/libQtScript.so.4      $deploy
+        cp "$path"/libQtXml.so.4         $deploy
+        cp "$path"/libQtXmlPatterns.so.4 $deploy
     else
-        cp "$path"/libicudata.so.* deploy
-        cp "$path"/libicui18n.so.* deploy
-        cp "$path"/libicuuc.so.*   deploy
+        cp "$path"/libicudata.so.* $deploy
+        cp "$path"/libicui18n.so.* $deploy
+        cp "$path"/libicuuc.so.*   $deploy
 
-        cp "$path/lib$QtX"Core.so.$qx    deploy
-        cp "$path/lib$QtX"Network.so.$qx deploy
-        cp "$path/lib$QtX"Qml.so.$qx     deploy
-        cp "$path/lib$QtX"Xml.so.$qx     deploy
+        cp "$path/lib$QtX"Core.so.$qx    $deploy
+        cp "$path/lib$QtX"Gui.so.$qx     $deploy
+        cp "$path/lib$QtX"Network.so.$qx $deploy
+        cp "$path/lib$QtX"Qml.so.$qx     $deploy
+        cp "$path/lib$QtX"Xml.so.$qx     $deploy
 
         if [ $qt = "qt5" ]; then
 
-            cp "$path/lib$QtX"XmlPatterns.so.$qx deploy
+            cp "$path/lib$QtX"XmlPatterns.so.$qx $deploy
         else
-            cp "$path/lib$QtX"Core5Compat.so.$qx deploy
+            cp "$path/lib$QtX"Core5Compat.so.$qx $deploy
         fi
     fi
 
@@ -183,16 +194,17 @@ elif [ $1 = "android" ]; then
 
     if [ $qt != "qt4" ]; then
 
-        cp "$path/lib$QtX"Core_*.so    deploy
-        cp "$path/lib$QtX"Network_*.so deploy
-        cp "$path/lib$QtX"Qml_*.so     deploy
-        cp "$path/lib$QtX"Xml_*.so     deploy
+        cp "$path/lib$QtX"Core_*.so    $deploy
+        cp "$path/lib$QtX"Gui_*.so     $deploy
+        cp "$path/lib$QtX"Network_*.so $deploy
+        cp "$path/lib$QtX"Qml_*.so     $deploy
+        cp "$path/lib$QtX"Xml_*.so     $deploy
 
         if [ $qt = "qt5" ]; then
 
-            cp "$path/lib$QtX"XmlPatterns_*.so deploy
+            cp "$path/lib$QtX"XmlPatterns_*.so $deploy
         else
-            cp "$path/lib$QtX"Core5Compat_*.so deploy
+            cp "$path/lib$QtX"Core5Compat_*.so $deploy
         fi
     fi
 fi
@@ -205,17 +217,70 @@ if [ $os = "windows" ]; then
 
     if [ $qt = "qt4" ]; then
 
-        cp "$path"/libeay32.dll deploy
-        cp "$path"/ssleay32.dll deploy
+        cp "$path"/libeay32.dll $deploy
+        cp "$path"/ssleay32.dll $deploy
     else
-        cp "$path"/libssl*.dll    deploy
-        cp "$path"/libcrypto*.dll deploy
+        cp "$path"/libssl*.dll    $deploy
+        cp "$path"/libcrypto*.dll $deploy
     fi
 
 elif [ $1 = "linux" ]; then
 
-    cp "$path"/libssl.so*    deploy
-    cp "$path"/libcrypto.so* deploy
+    cp "$path"/libssl.so*    $deploy
+    cp "$path"/libcrypto.so* $deploy
+fi
+
+#--------------------------------------------------------------------------------------------------
+# VLC
+#--------------------------------------------------------------------------------------------------
+
+if [ $os = "windows" ]; then
+
+    cp -r "$path"/plugins $deploy
+
+    cp "$path"/libvlc*.dll $deploy
+
+elif [ $1 = "macOS" ]; then
+
+    cp -r "$path"/plugins $deploy
+
+    cp "$path"/libvlc*.dylib $deploy
+
+elif [ $1 = "linux" ]; then
+
+    cp -r "$path"/vlc $deploy
+
+    cp "$path"/libvlc*.so* $deploy
+fi
+
+#--------------------------------------------------------------------------------------------------
+# libtorrent
+#--------------------------------------------------------------------------------------------------
+
+if [ $os = "windows" ]; then
+
+    cp "$path"/*torrent-rasterbar.dll $deploy
+
+elif [ $1 = "macOS" ]; then
+
+    cp "$path"/libtorrent-rasterbar.dylib $deploy
+
+elif [ $1 = "linux" ]; then
+
+    cp "$path"/libtorrent-rasterbar*.so* $deploy
+fi
+
+#--------------------------------------------------------------------------------------------------
+# Boost
+#--------------------------------------------------------------------------------------------------
+
+if [ $1 = "macOS" ]; then
+
+    cp "$path"/libboost*.dylib $deploy
+
+elif [ $1 = "linux" ]; then
+
+    cp "$path"/libboost*.so* $deploy
 fi
 
 echo "-------------"
@@ -229,19 +294,22 @@ echo "COPYING $target"
 
 if [ $os = "windows" ]; then
 
-    cp bin/$target.exe deploy
+    cp bin/$target.exe $deploy
 
 elif [ $1 = "macOS" ]; then
 
-    cp bin/$target deploy
+    cp bin/$target $deploy
 
-    cd deploy
+    cd $deploy
 
     #----------------------------------------------------------------------------------------------
     # Qt
 
-    install_name_tool -change @rpath/QtCore.framework/Versions/$qx/QtCore \
-                              @loader_path/QtCore.dylib $target
+    install_name_tool -change @rpath/QtGui.framework/Versions/$qx/QtGui \
+                              @loader_path/QtGui.dylib $target
+
+    install_name_tool -change @rpath/QtCore.framework/Versions/$qx/QtGui \
+                              @loader_path/QtGui.dylib $target
 
     install_name_tool -change @rpath/QtNetwork.framework/Versions/$qx/QtNetwork \
                               @loader_path/QtNetwork.dylib $target
@@ -261,17 +329,24 @@ elif [ $1 = "macOS" ]; then
                                   @loader_path/QtCore5Compat.dylib $target
     fi
 
+    otool -L $target
+
     #----------------------------------------------------------------------------------------------
 
     cd -
 
 elif [ $1 = "linux" ]; then
 
-    cp bin/$target deploy
+    cp bin/$target $deploy
+
+    # NOTE: This script is useful for compatibilty. It enforces the application path for libraries.
+    cp dist/script/start.sh $deploy
+
+    chmod +x $deploy/start.sh
 
 elif [ $1 = "android" ]; then
 
-    cp bin/lib$target* deploy
+    cp bin/lib$target* $deploy
 fi
 
 #--------------------------------------------------------------------------------------------------
@@ -282,9 +357,9 @@ if [ $1 != "android" ]; then
 
     echo "COPYING backend"
 
-    mkdir -p deploy/backend/cover
+    mkdir -p $deploy/backend/cover
 
-    cp "$backend"/cover/* deploy/backend/cover
+    cp "$backend"/cover/* $deploy/backend/cover
 
-    cp "$backend"/*.vbml deploy/backend
+    cp "$backend"/*.vbml $deploy/backend
 fi
