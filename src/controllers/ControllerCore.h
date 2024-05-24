@@ -32,9 +32,7 @@
 // Forward declarations
 class WControllerFileReply;
 class WBackendIndex;
-class WMediaReply;
-class WPlaylist;
-class WLibraryFolder;
+class WPlayer;
 
 class ControllerCore : public WController
 {
@@ -53,25 +51,11 @@ private: // Functions
 
     WControllerFileReply * copyBackends() const;
 
-    bool loadTrack   (const QString & url);
-    bool loadPlaylist(const QString & url);
-
-    bool loadCover(const QString & label, const QString & q);
-
-    void writeOutput() const;
-
-    QString vbml(const QString & content) const;
-
 private slots:
     void onLoaded();
 
     void onIndexLoaded ();
     void onIndexUpdated();
-
-    void onMedia   ();
-    void onTrack   ();
-    void onPlaylist();
-    void onFolder  ();
 
 private: // Variables
     QString _path;
@@ -80,11 +64,7 @@ private: // Variables
 
     WBackendIndex * _index;
 
-    WMediaReply    * _media;
-    WPlaylist      * _playlist;
-    WLibraryFolder * _folder;
-
-    QString _output;
+    WPlayer * _player;
 
 private:
     Q_DISABLE_COPY      (ControllerCore)

@@ -25,16 +25,15 @@
 // Qt includes
 #include <QCoreApplication>
 #include <QDir>
-#include <QTextStream>
 
 // Sk includes
 #include <WControllerApplication>
 #include <WControllerFile>
-#include <WControllerNetwork>
-#include <WControllerPlaylist>
 #include <WControllerMedia>
+#include <WControllerTorrent>
 #include <WBackendIndex>
-#include <WPlaylist>
+#include <WBackendTorrent>
+#include <WPlayer>
 
 W_INIT_CONTROLLER(ControllerCore)
 
@@ -43,12 +42,13 @@ W_INIT_CONTROLLER(ControllerCore)
 
 static const QString CORE_VERSION = "1.0.0-0";
 
+// NOTE: Defaut streaming port for tevo.
+static const int CORE_PORT = 8400;
+
 #ifndef SK_DEPLOY
 static const QString PATH_STORAGE = "/storage";
 static const QString PATH_BACKEND = "../../backend";
 #endif
-
-static const QString PATH_OUTPUT = "output.vbml";
 
 //-------------------------------------------------------------------------------------------------
 // Ctor / dtor
@@ -56,10 +56,6 @@ static const QString PATH_OUTPUT = "output.vbml";
 
 ControllerCore::ControllerCore() : WController()
 {
-    _media    = NULL;
-    _playlist = NULL;
-    _folder   = NULL;
-
     //---------------------------------------------------------------------------------------------
     // Settings
 
@@ -88,10 +84,10 @@ ControllerCore::ControllerCore() : WController()
     //---------------------------------------------------------------------------------------------
     // Usage
 
-    qDebug("tevo %s", sk->version().C_STR);
-
     if (argc != 2)
     {
+        qInfo("tevo %s", sk->version().C_STR);
+
         usage();
 
         return false;
@@ -99,13 +95,21 @@ ControllerCore::ControllerCore() : WController()
 
     _url = argv[1];
 
-    qDebug("url: %s", _url.C_STR);
+    //wControllerFile->setVerbosity(QtInfoMsg);
+
+    qInfo("tevo %s", sk->version().C_STR);
+
+    qInfo("url: %s", _url.C_STR);
 
     //---------------------------------------------------------------------------------------------
     // Controllers
 
     W_CREATE_CONTROLLER(WControllerPlaylist);
     W_CREATE_CONTROLLER(WControllerMedia);
+
+#ifndef SK_NO_TORRENT
+    W_CREATE_CONTROLLER_2(WControllerTorrent, _path + "/torrents", CORE_PORT);
+#endif
 
     //---------------------------------------------------------------------------------------------
     // Backend index
@@ -127,6 +131,13 @@ ControllerCore::ControllerCore() : WController()
     }
     else createIndex();
 
+    //---------------------------------------------------------------------------------------------
+    // Player
+
+    _player = new WPlayer;
+
+    _player->setBackend(new WBackendTorrent);
+
     return true;
 }
 
@@ -136,7 +147,7 @@ ControllerCore::ControllerCore() : WController()
 
 bool ControllerCore::usage() const
 {
-    qDebug("Usage: tevo <text>");
+    qInfo("Usage: tevo <text>");
 
     return false;
 }
@@ -172,86 +183,6 @@ WControllerFileReply * ControllerCore::copyBackends() const
 }
 
 //-------------------------------------------------------------------------------------------------
-
-bool ControllerCore::loadTrack(const QString & url)
-{
-    _playlist = new WPlaylist;
-
-    connect(_playlist, SIGNAL(trackQueryCompleted()), this, SLOT(onTrack()));
-
-    _playlist->addSource(url, true);
-
-    return _playlist->trackIsLoading(0);
-}
-
-bool ControllerCore::loadPlaylist(const QString & url)
-{
-    _playlist = new WPlaylist;
-
-    connect(_playlist, SIGNAL(queryCompleted()), this, SLOT(onPlaylist()));
-
-    _playlist->loadSource(url);
-
-    return _playlist->queryIsLoading();
-}
-
-bool ControllerCore::loadCover(const QString & label, const QString & q)
-{
-    _playlist = new WPlaylist;
-
-    connect(_playlist, SIGNAL(trackQueryCompleted()), this, SLOT(onTrack()));
-
-    WTrack track(QString(), WTrack::LoadCover);
-
-    track.setTitle(q);
-
-    track.setAuthor(label);
-
-    _playlist->addTrack(track);
-
-    _playlist->loadTrack(0);
-
-    return _playlist->trackIsLoading(0);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void ControllerCore::writeOutput() const
-{
-    // NOTE: Maybe another query is still loading.
-    if (_media || _playlist || _folder) return;
-
-    if (_output.isEmpty())
-    {
-        // NOTE: If the output is empty we return an erorr.
-        QCoreApplication::exit(1);
-
-        // NOTE: We need to return after 'exit'.
-        return;
-    }
-
-    // NOTE: We are using the '%s' option otherwise we get random replacements when we have a '%1'.
-    qDebug("%s", _output.C_STR);
-
-    QFile file(PATH_OUTPUT);
-
-    file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-
-    QTextStream stream(&file);
-
-    stream << _output;
-
-    QCoreApplication::exit(0);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-QString ControllerCore::vbml(const QString & content) const
-{
-    return "[VBML]\n" + content + "[/VBML]";
-}
-
-//-------------------------------------------------------------------------------------------------
 // Private slots
 //-------------------------------------------------------------------------------------------------
 
@@ -281,160 +212,8 @@ void ControllerCore::onIndexUpdated()
     // NOTE: We don't want this slot to be called again.
     disconnect(_index, 0, this, SLOT(onIndexUpdated()));
 
-    WBackendNet * backend = wControllerPlaylist->backendFromUrl(_url);
+    // FIXME libtorrent 2.0.9: For some reason, we need to wait before deleting the session.
+    Sk::wait(100);
 
-    if (backend == NULL)
-    {
-        qWarning("ControllerCore::onIndexUpdated: Cannot find a backend for %s.", _url.C_STR);
-
-        QCoreApplication::exit(1);
-
-        // NOTE: We need to return after 'exit'.
-        return;
-    }
-
-    bool result = false;
-
-    if (WBackendNet::checkQuery(_url))
-    {
-        qDebug("QUERY DETECTED");
-
-        WLibraryItem::Type type = backend->typeFromQuery(_url);
-
-        if (type == WLibraryItem::Folder)
-        {
-            qDebug("FOLDER DETECTED");
-
-            _folder = new WLibraryFolder;
-
-            connect(_folder, SIGNAL(queryCompleted()), this, SLOT(onFolder()));
-
-            _folder->loadSource(_url);
-
-            result = _folder->queryIsLoading();
-        }
-
-        QString method = WControllerNetwork::extractUrlValue(_url, "method");
-
-        if (method == "cover")
-        {
-            qDebug("COVER DETECTED");
-
-            result = loadCover(WControllerNetwork::extractUrlValue(_url, "label"),
-                               WControllerNetwork::extractUrlValue(_url, "q"));
-        }
-        else
-        {
-            qDebug("PLAYLIST DETECTED");
-
-            result = loadPlaylist(_url);
-        }
-    }
-    else
-    {
-        QString id = backend->getTrackId(_url);
-
-        if (id.isEmpty() == false)
-        {
-            qDebug("TRACK DETECTED");
-
-            _media = wControllerMedia->getMedia(_url);
-
-            if (_media->isLoaded())
-            {
-                delete _media;
-
-                _media = NULL;
-            }
-            else connect(_media, SIGNAL(loaded(WMediaReply *)), this, SLOT(onMedia()));
-
-            result = loadTrack(_url);
-        }
-
-        WBackendNetPlaylistInfo info = backend->getPlaylistInfo(_url);
-
-        if (info.isValid())
-        {
-            qDebug("PLAYLIST DETECTED");
-
-            result = loadPlaylist(_url);
-        }
-    }
-
-    backend->tryDelete();
-
-    if (result == false)
-    {
-        QCoreApplication::exit(0);
-    }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void ControllerCore::onMedia()
-{
-    qDebug("MEDIA LOADED");
-
-    if (_media->medias().isEmpty() == false)
-    {
-        _output.append('\n' + vbml(_media->toVbml()));
-    }
-
-    _media = NULL;
-
-    writeOutput();
-}
-
-void ControllerCore::onTrack()
-{
-    qDebug("TRACK LOADED");
-
-    if (_playlist->trackTitle(0).isEmpty() == false
-        ||
-        _playlist->trackCover(0).isEmpty() == false)
-    {
-        // NOTE: We want the track VBML to appear first so we prepend it.
-        _output.prepend(vbml(_playlist->trackVbml(0)));
-    }
-
-    // NOTE: Maybe we are still loading another query.
-    if (_playlist->queryIsLoading()) return;
-
-    _playlist = NULL;
-
-    writeOutput();
-}
-
-void ControllerCore::onPlaylist()
-{
-    qDebug("PLAYLIST LOADED");
-
-    if (_playlist->isEmpty() == false)
-    {
-        _output.append(vbml(_playlist->toVbml(2)));
-    }
-
-    // NOTE: Maybe we are still loading another query.
-    if (_playlist->queryIsLoading()) return;
-
-    _playlist = NULL;
-
-    writeOutput();
-}
-
-void ControllerCore::onFolder()
-{
-    qDebug("FOLDER LOADED");
-
-    if (_folder->isEmpty() == false)
-    {
-        _output.append(vbml(_folder->toVbml(2)));
-    }
-
-    // NOTE: Maybe we are still loading another query.
-    if (_folder->queryIsLoading()) return;
-
-    _folder = NULL;
-
-    writeOutput();
+    QCoreApplication::exit(0);
 }

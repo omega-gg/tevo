@@ -44,7 +44,7 @@ contains(QT_MAJOR_VERSION, 4) {
 DEFINES += QUAZIP_BUILD \
            SK_CONSOLE \
            SK_NO_QML \
-           SK_CORE_LIBRARY SK_GUI_LIBRARY SK_BACKEND_LIBRARY SK_MEDIA_LIBRARY \
+           SK_CORE_LIBRARY SK_GUI_LIBRARY SK_BACKEND_LIBRARY SK_MEDIA_LIBRARY SK_TORRENT_LIBRARY \
            SK_CHARSET SK_BACKEND_LOCAL #SK_BACKEND_LOG
 
 ios:DEFINES += SK_NO_TORRENT
@@ -78,6 +78,7 @@ include(src/network/network.pri)
 include(src/image/image.pri)
 include(src/media/media.pri)
 include(src/vlc/vlc.pri)
+include(src/torrent/torrent.pri)
 
 include(src/3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include(src/3rdparty/zlib/zlib.pri)
