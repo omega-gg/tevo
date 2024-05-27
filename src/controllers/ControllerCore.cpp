@@ -115,7 +115,7 @@ ControllerCore::ControllerCore() : WController()
             }
             else if (name == "quiet")
             {
-                verbosity = static_cast<QtMsgType> (QtInfoMsg + 1);
+                verbosity = static_cast<QtMsgType> (QtSystemMsg + 1);
             }
             else if (name.startsWith("at="))
             {
