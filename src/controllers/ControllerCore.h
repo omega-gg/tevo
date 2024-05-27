@@ -23,6 +23,9 @@
 #ifndef CONTROLLERCORE_H
 #define CONTROLLERCORE_H
 
+// Qt includes
+#include <QTimer>
+
 // Sk includes
 #include <WController>
 
@@ -33,6 +36,7 @@
 class WControllerFileReply;
 class WBackendIndex;
 class WPlayer;
+class WPlaylist;
 
 class ControllerCore : public WController
 {
@@ -47,15 +51,26 @@ public: // Interface
 private: // Functions
     bool usage() const;
 
+    void play(const QString & source);
+
     void createIndex();
 
     WControllerFileReply * copyBackends() const;
+
+    int extractMsecs(const QString & text) const;
 
 private slots:
     void onLoaded();
 
     void onIndexLoaded ();
     void onIndexUpdated();
+
+    void onQueryEnded    ();
+    void onQueryCompleted();
+
+    void onCurrentTime();
+
+    void quit();
 
 private: // Variables
     QString _path;
@@ -65,6 +80,15 @@ private: // Variables
     WBackendIndex * _index;
 
     WPlayer * _player;
+
+    WPlaylist * _playlist;
+
+    int _at;
+    int _end;
+
+    QString _backend;
+
+    QTimer _timer;
 
 private:
     Q_DISABLE_COPY      (ControllerCore)
