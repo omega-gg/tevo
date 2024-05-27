@@ -38,12 +38,15 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 ## Options
 
     --help                 Print this help text
-    --verbose              Print debugging informations
-    --quiet                Mute application output
-    --at=<time>            Start time with the 00:00:00.000 format
-    --end=<time>           End time with the 00:00:00.000 format (overrides duration)
-    --duration=<time>      Duration with the 00:00:00.000 format
-    --backend=<string>     Select a backend based on its id (defaults to duckduckgo)
+
+    --verbose, --quiet     Print debug informations or hide everything
+
+    --at=<time>            Track start time  (00:00:00.000 format)
+    --end=<time>           Track end time    (00:00:00.000 format) (overrides duration)
+    --duration=<time>      Playback duration (00:00:00.000 format)
+
+    --backend=<string>     Select a backend based on its name in lowercase
+                           (defaults to duckduckgo)
 
 ## Technology
 

@@ -103,7 +103,13 @@ ControllerCore::ControllerCore() : WController()
 
             name = name.remove(0, 2).toLower();
 
-            if (name == "verbose")
+            if (name == "help")
+            {
+                help();
+
+                return false;
+            }
+            else if (name == "verbose")
             {
                 verbosity = QtDebugMsg;
             }
@@ -147,8 +153,6 @@ ControllerCore::ControllerCore() : WController()
 
     if (_text.isEmpty())
     {
-        qInfo("tevo %s", sk->version().C_STR);
-
         usage();
 
         return false;
@@ -220,12 +224,31 @@ ControllerCore::ControllerCore() : WController()
 // Functions private
 //-------------------------------------------------------------------------------------------------
 
-bool ControllerCore::usage() const
+void ControllerCore::usage() const
 {
-    qInfo("Usage: tevo [options] <text>\n"
-          "tevo --help for more informations");
+    qInfo("tevo %s", sk->version().C_STR);
 
-    return false;
+    qInfo("Usage: tevo [options] <text>\n"
+          "\n"
+          "tevo --help for more informations");
+}
+
+void ControllerCore::help() const
+{
+    qInfo("tevo %s", sk->version().C_STR);
+
+    qInfo("Usage: tevo [options] <text>\n"
+          "\n"
+          "--help                 Print this help text\n"
+          "\n"
+          "--verbose, --quiet     Print debug informations or hide everything\n"
+          "\n"
+          "--at=<time>            Track start time  (00:00:00.000 format)\n"
+          "--end=<time>           Track end time    (00:00:00.000 format) (overrides duration)\n"
+          "--duration=<time>      Playback duration (00:00:00.000 format)\n"
+          "\n"
+          "--backend=<string>     Select a backend based on its name in lowercase\n"
+          "                       (defaults to duckduckgo)");
 }
 
 void ControllerCore::play(const QString & source)
