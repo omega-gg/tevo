@@ -37,13 +37,13 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Options
 
-    --help        Print this help text and exit
-    --verbose     Print debugging informations
-    --quiet       Mute application output
-    --at          Start time with the 00:00:00.000 format
-    --end         End time with the 00:00:00.000 format (overrides duration)
-    --duration    Duration with the 00:00:00.000 format
-    --backend     Select a backend based on its id (defaults to duckduckgo)
+    --help                 Print this help text
+    --verbose              Print debugging informations
+    --quiet                Mute application output
+    --at=<time>            Start time with the 00:00:00.000 format
+    --end=<time>           End time with the 00:00:00.000 format (overrides duration)
+    --duration=<time>      Duration with the 00:00:00.000 format
+    --backend=<string>     Select a backend based on its id (defaults to duckduckgo)
 
 ## Technology
 
