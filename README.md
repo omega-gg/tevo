@@ -31,9 +31,19 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Usage
 
-    tevo <text>
+    tevo [options] <text>
 
     Where <text> is the query or resource you want to play.
+
+## Options
+
+    --help     Print this help text and exit
+    --verbose  Print debugging informations
+    --quiet    Mute application output
+    --at       Start time with the 00:00:00.000 format
+    --end      End time with the 00:00:00.000 format (overrides duration)
+    --duration Duration with the 00:00:00.000 format
+    --backend  Select a backend based on its id (defaults to duckduckgo)
 
 ## Technology
 

@@ -222,7 +222,8 @@ ControllerCore::ControllerCore() : WController()
 
 bool ControllerCore::usage() const
 {
-    qInfo("Usage: tevo <text>");
+    qInfo("Usage: tevo [options] <text>\n"
+          "tevo --help for more informations");
 
     return false;
 }
