@@ -226,8 +226,6 @@ ControllerCore::ControllerCore() : WController()
 
 void ControllerCore::usage() const
 {
-    qInfo("tevo %s", sk->version().C_STR);
-
     qInfo("Usage: tevo [options] <text>\n"
           "\n"
           "tevo --help for more informations");
@@ -235,7 +233,7 @@ void ControllerCore::usage() const
 
 void ControllerCore::help() const
 {
-    qInfo("tevo %s", sk->version().C_STR);
+    qInfo("tevo %s\n", sk->version().C_STR);
 
     qInfo("Usage: tevo [options] <text>\n"
           "\n"
