@@ -163,7 +163,7 @@ ControllerCore::ControllerCore() : WController()
         wControllerFile->setVerbosity(verbosity);
     }
 
-    qInfo("tevo %s", sk->version().C_STR);
+    qDebug("tevo %s", sk->version().C_STR);
 
     qInfo("text: %s", _text.C_STR);
 
@@ -237,7 +237,7 @@ void ControllerCore::help() const
 
     qInfo("Usage: tevo [options] <text>\n"
           "\n"
-          "--help                 Print this help text\n"
+          "--help                 Print this text\n"
           "\n"
           "--verbose,             Print debug informations\n"
           "--quiet                Mute application output\n"
