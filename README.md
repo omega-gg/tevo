@@ -5,7 +5,7 @@ tevo
 [![GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl.html)
 
 tevo is a command line [Semantic Player](https://omega.gg/about/SemanticPlayer) built for [Motion Freedom](https://omega.gg/about/MotionFreedom).<br>
-Designed to retrieve and play Internet video resources from a single line of text.<br>
+Designed to retrieve and play video resources from a single line of text.<br>
 With a focus on simplicity, efficiency and lightness.<br>
 
 ## Backends
