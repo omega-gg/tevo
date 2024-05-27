@@ -40,7 +40,8 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
     --help                 Print this help text
 
-    --verbose, --quiet     Print debug informations or hide everything
+    --verbose,             Print debug informations
+    --quiet                Mute application output
 
     --at=<time>            Track start time  (00:00:00.000 format)
     --end=<time>           Track end time    (00:00:00.000 format) (overrides duration)
