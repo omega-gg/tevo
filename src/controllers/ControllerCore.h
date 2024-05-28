@@ -48,17 +48,26 @@ private:
 public: // Interface
     Q_INVOKABLE bool run(int & argc, char ** argv);
 
+    Q_INVOKABLE void quit();
+
 private: // Functions
     void usage() const;
     void help () const;
 
     void play(const QString & source);
 
+    void loadTrack();
+
     void createIndex();
 
     WControllerFileReply * copyBackends() const;
 
+    void createPlaylist();
+
     int extractMsecs(const QString & text) const;
+
+private: // Static functions
+    static void onInterrupt(int id);
 
 private slots:
     void onLoaded();
@@ -69,9 +78,10 @@ private slots:
     void onQueryEnded    ();
     void onQueryCompleted();
 
-    void onCurrentTime();
+    void onTrackEnded    ();
+    void onTrackCompleted();
 
-    void quit();
+    void onCurrentTime();
 
 private: // Variables
     QString _path;

@@ -78,6 +78,8 @@ ControllerCore::ControllerCore() : WController()
 
 /* Q_INVOKABLE */ bool ControllerCore::run(int & argc, char ** argv)
 {
+    _playlist = NULL;
+
     _at  = -1;
     _end = -1;
 
@@ -165,11 +167,19 @@ ControllerCore::ControllerCore() : WController()
 
     qDebug("tevo %s", sk->version().C_STR);
 
-    qInfo("text: %s", _text.C_STR);
-
-    qDebug("at: %d", _at);
-    qDebug("end: %d", _end);
-    qDebug("backend: %s", _backend.C_STR);
+    if (_backend.isEmpty())
+    {
+        qDebug("text: %s", _text.C_STR);
+        qDebug("at  : %d", _at);
+        qDebug("end : %d", _end);
+    }
+    else
+    {
+        qDebug("text   : %s", _text.C_STR);
+        qDebug("at     : %d", _at);
+        qDebug("end    : %d", _end);
+        qDebug("backend: %s", _backend.C_STR);
+    }
 
     //---------------------------------------------------------------------------------------------
     // Controllers
@@ -210,14 +220,29 @@ ControllerCore::ControllerCore() : WController()
 
     _player->setOutput(WAbstractBackend::OutputAudio);
 
+    connect(_player, SIGNAL(ended()), this, SLOT(quit()));
+
     if (_end != -1)
     {
         connect(_player, SIGNAL(currentTimeChanged()), this, SLOT(onCurrentTime()));
     }
 
-    connect(_player, SIGNAL(ended()), this, SLOT(quit()));
-
     return true;
+}
+
+void ControllerCore::quit()
+{
+    if (_player && _player->isPlaying())
+    {
+        qInfo("Stopped at %s",
+              WControllerPlaylist::getPlayerTime(_player->currentTime()).C_STR);
+    }
+
+    // FIXME libtorrent 2.0.9: For some reason, we need to wait before deleting the session
+    //                         otherwise we get a crash.
+    Sk::wait(200);
+
+    sk->quit();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -258,6 +283,8 @@ void ControllerCore::play(const QString & source)
 
     _player->play();
 
+    loadTrack();
+
     if (_end == -1) return;
 
     _timer.setSingleShot(true);
@@ -267,12 +294,18 @@ void ControllerCore::play(const QString & source)
 #endif
 
     QObject::connect(&_timer, SIGNAL(timeout()), this, SLOT(quit()));
+}
 
-    if (_at == -1)
-    {
-         _timer.start(_end);
-    }
-    else _timer.start(_end - _at);
+void ControllerCore::loadTrack()
+{
+    createPlaylist();
+
+    connect(_playlist, SIGNAL(trackQueryEnded    ()), this, SLOT(onTrackEnded    ()));
+    connect(_playlist, SIGNAL(trackQueryCompleted()), this, SLOT(onTrackCompleted()));
+
+    _playlist->addSource(_player->source(), true);
+
+    signal(SIGINT, onInterrupt);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -303,6 +336,15 @@ WControllerFileReply * ControllerCore::copyBackends() const
 #endif
 }
 
+void ControllerCore::createPlaylist()
+{
+    if (_playlist) return;
+
+    _playlist = new WPlaylist;
+
+    _playlist->setParent(this);
+}
+
 //-------------------------------------------------------------------------------------------------
 
 int ControllerCore::extractMsecs(const QString & text) const
@@ -314,6 +356,15 @@ int ControllerCore::extractMsecs(const QString & text) const
         return -1;
     }
     else return qMax(0, msecs);
+}
+
+//-------------------------------------------------------------------------------------------------
+// Private static functions
+//-------------------------------------------------------------------------------------------------
+
+/* static */ void ControllerCore::onInterrupt(int)
+{
+    core->quit();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -363,9 +414,7 @@ void ControllerCore::onIndexUpdated()
         }
         else id = _backend;
 
-        _playlist = new WPlaylist;
-
-        _playlist->setParent(this);
+        createPlaylist();
 
         connect(_playlist, SIGNAL(queryEnded    ()), this, SLOT(onQueryEnded    ()));
         connect(_playlist, SIGNAL(queryCompleted()), this, SLOT(onQueryCompleted()));
@@ -385,9 +434,11 @@ void ControllerCore::onQueryEnded()
 
     disconnect(_playlist, 0, this, 0);
 
-    play(_playlist->trackSource(0));
+    QString source = _playlist->trackSource(0);
 
     _playlist->clearTracks();
+
+    play(source);
 }
 
 void ControllerCore::onQueryCompleted()
@@ -395,6 +446,28 @@ void ControllerCore::onQueryCompleted()
     if (_player->source().isEmpty() == false) return;
 
     quit();
+}
+
+void ControllerCore::onTrackEnded()
+{
+    const WTrack * track = _playlist->trackPointerAt(0);
+
+    QString title = track->title();
+
+    if (title.isEmpty()) return;
+
+    qInfo("%s", title.C_STR);
+
+    onTrackCompleted();
+}
+
+void ControllerCore::onTrackCompleted()
+{
+    disconnect(_playlist, 0, this, 0);
+
+    qInfo("%s", _player->source().C_STR);
+
+    _playlist->clearTracks();
 }
 
 void ControllerCore::onCurrentTime()
@@ -406,15 +479,4 @@ void ControllerCore::onCurrentTime()
         _timer.start(_end - time);
     }
     else quit();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void ControllerCore::quit()
-{
-    // FIXME libtorrent 2.0.9: For some reason, we need to wait before deleting the session
-    //                         otherwise we get a crash.
-    Sk::wait(200);
-
-    sk->quit();
 }
