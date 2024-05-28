@@ -1,4 +1,4 @@
-tevo
+<a href="https://omega.gg/tevo"><img src="dist/icon.png" alt="tevo" width="128px"></a>
 ---
 [![Discord](https://img.shields.io/discord/705770212485496852)](https://omega.gg/discord)
 [![azure](https://dev.azure.com/bunjee/tevo/_apis/build/status/omega-gg.tevo)](https://dev.azure.com/bunjee/tevo/_build)
@@ -12,7 +12,7 @@ With a focus on simplicity, efficiency and lightness.<br>
 tevo is like a [yt-dlp](https://github.com/yt-dlp/yt-dlp) that plays videos instead of downloading
 them.<br>
 
-## Backends
+## tevo
 
 tevo accesses and aggregates videos via the [VBML](https://omega.gg/VBML) language.<br>
 

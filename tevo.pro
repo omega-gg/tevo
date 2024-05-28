@@ -133,6 +133,8 @@ macx {
     QMAKE_POST_LINK += $${QMAKE_COPY} $${DESTDIR}/libvlccore.dylib $$PATH;
 }
 
+RC_FILE = dist/tevo.rc
+
 OTHER_FILES += 3rdparty.sh \
                configure.sh \
                build.sh \
@@ -161,4 +163,5 @@ OTHER_FILES += 3rdparty.sh \
                test/tmdb.sh \
                test/lastfm.sh \
                test/opensubtitles.sh \
+               dist/tevo.rc \
                dist/script/start.sh \
