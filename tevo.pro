@@ -133,6 +133,8 @@ macx {
     QMAKE_POST_LINK += $${QMAKE_COPY} $${DESTDIR}/libvlccore.dylib $$PATH;
 }
 
+macx:ICON = dist/icon.icns
+
 RC_FILE = dist/tevo.rc
 
 OTHER_FILES += 3rdparty.sh \
@@ -145,23 +147,6 @@ OTHER_FILES += 3rdparty.sh \
                AUTHORS.md \
                .azure-pipelines.yml \
                .appveyor.yml \
-               test/copy.sh \
-               test/all.sh \
-               test/duckduckgo.sh \
-               test/youtube.sh \
-               test/dailymotion.sh \
-               test/vimeo.sh \
-               test/twitter.sh \
-               test/facebook.sh \
-               test/odysee.sh \
-               test/peertube.sh \
-               test/vox.sh \
-               test/iptv.sh \
-               test/twitch.sh \
-               test/tiktok.sh \
-               test/soundcloud.sh \
-               test/tmdb.sh \
-               test/lastfm.sh \
-               test/opensubtitles.sh \
+               content/generate.sh \
                dist/tevo.rc \
                dist/script/start.sh \

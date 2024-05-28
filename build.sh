@@ -312,7 +312,18 @@ fi
 $qmake --version
 echo ""
 
-cd build
+cd content
+
+if [ "$2" = "deploy" ]; then
+
+    sh generate.sh $1 deploy
+else
+    sh generate.sh $1
+fi
+
+echo ""
+
+cd ../build
 
 if [ "$2" = "deploy" ]; then
 
