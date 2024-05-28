@@ -286,7 +286,9 @@ void ControllerCore::play(const QString & source)
 
     _player->play();
 
-    loadTrack();
+    connect(_player, SIGNAL(stateLoadChanged()), this, SLOT(onStateLoadChanged()));
+
+    signal(SIGINT, onInterrupt);
 
     if (_end == -1) return;
 
@@ -307,8 +309,6 @@ void ControllerCore::loadTrack()
     connect(_playlist, SIGNAL(trackQueryCompleted()), this, SLOT(onTrackCompleted()));
 
     _playlist->addSource(_player->source(), true);
-
-    signal(SIGINT, onInterrupt);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -471,6 +471,15 @@ void ControllerCore::onTrackCompleted()
     qInfo("%s", _player->source().C_STR);
 
     _playlist->clearTracks();
+}
+
+void ControllerCore::onStateLoadChanged()
+{
+    if (_player->isDefault() == false) return;
+
+    disconnect(_player, SIGNAL(stateLoadChanged()), this, SLOT(onStateLoadChanged()));
+
+    loadTrack();
 }
 
 void ControllerCore::onCurrentTime()

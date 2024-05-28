@@ -81,6 +81,8 @@ private slots:
     void onTrackEnded    ();
     void onTrackCompleted();
 
+    void onStateLoadChanged();
+
     void onCurrentTime();
 
 private: // Variables
