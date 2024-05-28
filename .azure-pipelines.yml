@@ -107,10 +107,15 @@ jobs:
   pool:
     vmImage: "ubuntu-latest"
   steps:
+  # NOTE: We need an older version to package the application.
   - bash: |
-      sh build.sh linux all
-      cd deploy
-      zip -rq ../tevo.zip *
+      docker run -d --name ubuntu -v $PWD:/tevo amd64/ubuntu:18.04 tail -f /dev/null
+      docker exec -t ubuntu bash -c "cd /tevo;
+                                     apt-get update;
+                                     apt-get -y install sudo curl zip git;
+                                     sh build.sh linux all;
+                                     cd deploy;
+                                     zip -rq ../tevo.zip *"
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux64-qt5
 
