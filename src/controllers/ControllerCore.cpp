@@ -22,6 +22,9 @@
 
 #include "ControllerCore.h"
 
+// C++ includes
+#include <signal.h>
+
 // Qt includes
 #include <QCoreApplication>
 #include <QDir>
