@@ -113,7 +113,7 @@ android:LIBS += -L$$ANDROID_LIB -lvlc \
                 -L$$ANDROID_LIB -ltry_signal
 
 macx {
-    PATH=$${DESTDIR}
+    PATH=$${DESTDIR}/$${TARGET}.app/Contents/MacOS
 
     QMAKE_POST_LINK = install_name_tool -change @rpath/libvlccore.dylib \
                       @loader_path/libvlccore.dylib $${DESTDIR}/libvlc.dylib;
