@@ -9,6 +9,9 @@ tevo is a command line [Semantic Player](https://omega.gg/about/SemanticPlayer) 
 Designed to retrieve and play video resources from a single line of text.<br>
 With a focus on simplicity, efficiency and lightness.<br>
 
+tevo is like [yt-dlp](https://github.com/yt-dlp/yt-dlp) that plays videos instead of downloading
+them.<br>
+
 ## Backends
 
 tevo accesses and aggregates videos via the [VBML](https://omega.gg/VBML) language.<br>
@@ -32,7 +35,7 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Usage
 
-    tevo [options] <text>
+    tevo <text> [options]
 
     Where <text> is the query or resource you want to play.
 
