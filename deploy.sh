@@ -87,7 +87,14 @@ echo ""
 # Bundle
 #--------------------------------------------------------------------------------------------------
 
-deploy="deploy"
+if [ $1 = "macOS" ]; then
+
+    cp -r bin/$target.app deploy
+
+    deploy="deploy/$target.app/Contents/MacOS"
+else
+    deploy="deploy"
+fi
 
 #--------------------------------------------------------------------------------------------------
 # Sky
@@ -305,10 +312,10 @@ elif [ $1 = "macOS" ]; then
     #----------------------------------------------------------------------------------------------
     # Qt
 
-    install_name_tool -change @rpath/QtGui.framework/Versions/$qx/QtGui \
-                              @loader_path/QtGui.dylib $target
+    install_name_tool -change @rpath/QtCore.framework/Versions/$qx/QtCore \
+                              @loader_path/QtCore.dylib $target
 
-    install_name_tool -change @rpath/QtCore.framework/Versions/$qx/QtGui \
+    install_name_tool -change @rpath/QtGui.framework/Versions/$qx/QtGui \
                               @loader_path/QtGui.dylib $target
 
     install_name_tool -change @rpath/QtNetwork.framework/Versions/$qx/QtNetwork \
@@ -330,6 +337,33 @@ elif [ $1 = "macOS" ]; then
     fi
 
     otool -L $target
+
+    #----------------------------------------------------------------------------------------------
+    # QtGui
+
+    if [ $qt = "qt6" ]; then
+
+        install_name_tool -change @rpath/QtDBus.framework/Versions/$qx/QtDBus \
+                                  @loader_path/QtDBus.dylib QtGui.dylib
+    fi
+
+    otool -L QtGui.dylib
+
+    #----------------------------------------------------------------------------------------------
+    # VLC
+
+    install_name_tool -change @rpath/libvlccore.dylib \
+                              @loader_path/libvlccore.dylib libvlc.dylib
+
+    otool -L libvlc.dylib
+
+    #----------------------------------------------------------------------------------------------
+    # libtorrent
+
+    install_name_tool -change libboost_system.dylib \
+                              @loader_path/libboost_system.dylib libtorrent-rasterbar.dylib
+
+    otool -L libtorrent-rasterbar.dylib
 
     #----------------------------------------------------------------------------------------------
 

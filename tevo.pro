@@ -28,8 +28,6 @@ contains(QT_MAJOR_VERSION, 4) {
 
 CONFIG += console
 
-macx:CONFIG -= app_bundle
-
 contains(QT_MAJOR_VERSION, 5) {
     android:QT += androidextras
 }
@@ -128,6 +126,11 @@ macx {
 
     QMAKE_POST_LINK += install_name_tool -change libboost_system.dylib \
                        @loader_path/libboost_system.dylib $$PATH/$${TARGET};
+
+    QMAKE_POST_LINK += $${QMAKE_COPY} -r $${DESTDIR}/plugins $$PATH;
+
+    QMAKE_POST_LINK += $${QMAKE_COPY} $${DESTDIR}/libvlc.dylib     $$PATH;
+    QMAKE_POST_LINK += $${QMAKE_COPY} $${DESTDIR}/libvlccore.dylib $$PATH;
 }
 
 OTHER_FILES += 3rdparty.sh \
