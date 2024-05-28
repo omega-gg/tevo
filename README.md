@@ -1,4 +1,6 @@
 <a href="https://omega.gg/tevo"><img src="dist/icon.png" alt="tevo" width="128px"></a>
+
+tevo
 ---
 [![Discord](https://img.shields.io/discord/705770212485496852)](https://omega.gg/discord)
 [![azure](https://dev.azure.com/bunjee/tevo/_apis/build/status/omega-gg.tevo)](https://dev.azure.com/bunjee/tevo/_build)
