@@ -9,7 +9,7 @@ tevo is a command line [Semantic Player](https://omega.gg/about/SemanticPlayer) 
 Designed to retrieve and play video resources from a single line of text.<br>
 With a focus on simplicity, efficiency and lightness.<br>
 
-tevo is like [yt-dlp](https://github.com/yt-dlp/yt-dlp) that plays videos instead of downloading
+tevo is like a [yt-dlp](https://github.com/yt-dlp/yt-dlp) that plays videos instead of downloading
 them.<br>
 
 ## Backends
