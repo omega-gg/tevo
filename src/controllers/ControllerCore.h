@@ -92,6 +92,8 @@ private slots:
     void onConnected();
 
 private: // Variables
+    QString _path;
+
     WBackendIndex * _index;
 
     WPlayer * _player;
@@ -99,8 +101,6 @@ private: // Variables
     WHookOutput * _hook;
 
     WPlaylist * _playlist;
-
-    QString _path;
 
     QString _text;
 
