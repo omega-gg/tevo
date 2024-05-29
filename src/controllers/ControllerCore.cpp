@@ -205,6 +205,9 @@ ControllerCore::ControllerCore() : WController()
     {
         qDebug("tevo %s", sk->version().C_STR);
 
+        qDebug("Path storage: %s", _path.C_STR);
+        qDebug("Path log:     %s", wControllerFile->pathLog().C_STR);
+
         qDebug("text: %s", _text.C_STR);
 
         qDebug("at : %d", _at);
