@@ -56,8 +56,13 @@ static const QString CORE_VERSION = "1.0.0-0";
 static const int CORE_PORT = 8400;
 
 #ifndef SK_DEPLOY
+#ifdef Q_OS_MACX
+static const QString PATH_STORAGE = "/../../../storage";
+static const QString PATH_BACKEND = "../../../../../backend";
+#else
 static const QString PATH_STORAGE = "/storage";
 static const QString PATH_BACKEND = "../../backend";
+#endif
 #endif
 
 //-------------------------------------------------------------------------------------------------
@@ -78,6 +83,8 @@ ControllerCore::ControllerCore() : WController()
 #else
     _path = QDir::currentPath() + PATH_STORAGE;
 #endif
+
+    wControllerFile->setPathStorage(_path);
 }
 
 //-------------------------------------------------------------------------------------------------
