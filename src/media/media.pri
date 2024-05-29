@@ -20,6 +20,8 @@ HEADERS += $$SK_GUI/media/WBackendNet.h \
            $$SK_GUI/media/WAbstractBackend_p.h \
            $$SK_GUI/media/WAbstractHook.h \
            $$SK_GUI/media/WAbstractHook_p.h \
+           $$SK_GUI/media/WHookOutput.h \
+           $$SK_GUI/media/WHookOutput_p.h \
            $$SK_GUI/media/WBookmarkTrack.h \
            $$SK_GUI/media/WBookmarkTrack_p.h \
            $$SK_GUI/media/WTabsTrack.h \
@@ -48,6 +50,7 @@ SOURCES += $$SK_GUI/media/WBackendNet.cpp \
            $$SK_GUI/media/WPlayer.cpp \
            $$SK_GUI/media/WAbstractBackend.cpp \
            $$SK_GUI/media/WAbstractHook.cpp \
+           $$SK_GUI/media/WHookOutput.cpp \
            $$SK_GUI/media/WBookmarkTrack.cpp \
            $$SK_GUI/media/WTabTrack.cpp \
            $$SK_GUI/media/WTabTrack_patch.cpp \

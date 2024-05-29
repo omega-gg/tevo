@@ -50,8 +50,15 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
     --end=<time>           Track end time    (00:00:00.000 format) (overrides duration)
     --duration=<time>      Playback duration (00:00:00.000 format)
 
-    --backend=<string>     Select a backend based on its name in lowercase
+    --backend=<string>     Set a backend based on its name in lowercase
                            (defaults to duckduckgo)
+
+    --screen=<string>      Set a tevolution screen based on its magic number
+                           (xxx-xxx-xxx-xxx)
+    --output=<string>      Set the output type (media, audio, video)
+                           (defaults to media)
+    --quality=<string>     Set the quality (144, 240, 360, 480, 720, 1080, 1440, 2160)
+                           (defaulst to 720)
 
 ## Technology
 

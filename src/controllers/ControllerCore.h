@@ -28,6 +28,7 @@
 
 // Sk includes
 #include <WController>
+#include <WAbstractBackend>
 
 // Defines
 #define core ControllerCore::instance()
@@ -36,6 +37,7 @@
 class WControllerFileReply;
 class WBackendIndex;
 class WPlayer;
+class WHookOutput;
 class WPlaylist;
 
 class ControllerCore : public WController
@@ -66,6 +68,8 @@ private: // Functions
 
     int extractMsecs(const QString & text) const;
 
+    QString getText(const QString & text) const;
+
 private: // Static functions
     static void onInterrupt(int id);
 
@@ -85,21 +89,30 @@ private slots:
 
     void onCurrentTime();
 
+    void onConnected();
+
 private: // Variables
-    QString _path;
-
-    QString _text;
-
     WBackendIndex * _index;
 
     WPlayer * _player;
 
+    WHookOutput * _hook;
+
     WPlaylist * _playlist;
+
+    QString _path;
+
+    QString _text;
 
     int _at;
     int _end;
 
     QString _backend;
+
+    QString _screen;
+
+    WAbstractBackend::Output  _output;
+    WAbstractBackend::Quality _quality;
 
     QTimer _timer;
 

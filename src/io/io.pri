@@ -20,6 +20,8 @@ HEADERS += $$SK_CORE/io/WAbstractLoader.h \
            $$SK_BACKEND/io/WBackendIndex.h \
            $$SK_BACKEND/io/WBackendIndex_p.h \
            $$SK_BACKEND/io/WBackendCache.h \
+           $$SK_TORRENT/io/WLoaderTorrent.h \
+           $$SK_TORRENT/io/WLoaderTorrent_p.h \
 
 SOURCES += $$SK_CORE/io/WAbstractLoader.cpp \
            $$SK_CORE/io/WLoaderNetwork.cpp \
@@ -33,3 +35,4 @@ SOURCES += $$SK_CORE/io/WAbstractLoader.cpp \
            $$SK_GUI/io/WBackendLoader.cpp \
            $$SK_BACKEND/io/WBackendIndex.cpp \
            $$SK_BACKEND/io/WBackendCache.cpp \
+           $$SK_TORRENT/io/WLoaderTorrent.cpp \

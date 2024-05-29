@@ -36,9 +36,14 @@
 #include <WControllerPlaylist>
 #include <WControllerMedia>
 #include <WControllerTorrent>
+#include <WLoaderVbml>
+#include <WLoaderTorrent>
 #include <WBackendIndex>
+#ifndef SK_NO_TORRENT
 #include <WBackendTorrent>
+#endif
 #include <WPlayer>
+#include <WHookOutput>
 
 W_INIT_CONTROLLER(ControllerCore)
 
@@ -86,6 +91,10 @@ ControllerCore::ControllerCore() : WController()
     _at  = -1;
     _end = -1;
 
+    _output = WAbstractBackend::OutputMedia;
+
+    _quality = WAbstractBackend::Quality720;
+
     //---------------------------------------------------------------------------------------------
     // Log
 
@@ -120,7 +129,11 @@ ControllerCore::ControllerCore() : WController()
             }
             else if (name == "quiet")
             {
+#ifdef QT_4
                 verbosity = static_cast<QtMsgType> (QtSystemMsg + 1);
+#else
+                verbosity = static_cast<QtMsgType> (QtInfoMsg + 1);
+#endif
             }
             else if (name.startsWith("at="))
             {
@@ -137,6 +150,24 @@ ControllerCore::ControllerCore() : WController()
             else if (name.startsWith("backend="))
             {
                 _backend = WControllerApplication::extractParameter(name);
+            }
+            else if (name.startsWith("screen="))
+            {
+                name = WControllerApplication::extractParameter(name);
+
+                _screen = WControllerPlaylist::vbmlUriFromCode(name);
+            }
+            else if (name.startsWith("output="))
+            {
+                name = WControllerApplication::extractParameter(name);
+
+                _output = WAbstractBackend::outputFromString(name);
+            }
+            else if (name.startsWith("quality="))
+            {
+                name = WControllerApplication::extractParameter(name);
+
+                _quality = WAbstractBackend::qualityFromString(name);
             }
         }
         else _text = string;
@@ -163,26 +194,22 @@ ControllerCore::ControllerCore() : WController()
         return false;
     }
 
-    if (verbosity != QtDebugMsg)
+    if (verbosity == QtDebugMsg)
     {
-        wControllerFile->setVerbosity(verbosity);
-    }
+        qDebug("tevo %s", sk->version().C_STR);
 
-    qDebug("tevo %s", sk->version().C_STR);
-
-    if (_backend.isEmpty())
-    {
         qDebug("text: %s", _text.C_STR);
-        qDebug("at  : %d", _at);
-        qDebug("end : %d", _end);
+
+        qDebug("at : %d", _at);
+        qDebug("end: %d", _end);
+
+        qDebug("backend: %s", getText(_backend).C_STR);
+
+        qDebug("screen : %s", getText(_screen)                                    .C_STR);
+        qDebug("output : %s", getText(WAbstractBackend::outputToString (_output)) .C_STR);
+        qDebug("quality: %s", getText(WAbstractBackend::qualityToString(_quality)).C_STR);
     }
-    else
-    {
-        qDebug("text   : %s", _text.C_STR);
-        qDebug("at     : %d", _at);
-        qDebug("end    : %d", _end);
-        qDebug("backend: %s", _backend.C_STR);
-    }
+    else wControllerFile->setVerbosity(verbosity);
 
     //---------------------------------------------------------------------------------------------
     // Controllers
@@ -192,6 +219,21 @@ ControllerCore::ControllerCore() : WController()
 
 #ifndef SK_NO_TORRENT
     W_CREATE_CONTROLLER_2(WControllerTorrent, _path + "/torrents", CORE_PORT);
+#endif
+
+    //---------------------------------------------------------------------------------------------
+    // LoaderVbml
+
+    wControllerPlaylist->registerLoader(WBackendNetQuery::TypeVbml, new WLoaderVbml(this));
+
+#ifndef SK_NO_TORRENT
+    //---------------------------------------------------------------------------------------------
+    // LoaderTorrent
+
+    WLoaderTorrent * loaderTorrent = new WLoaderTorrent(this);
+
+    wControllerPlaylist->registerLoader(WBackendNetQuery::TypeTorrent, loaderTorrent);
+    wControllerTorrent ->registerLoader(WBackendNetQuery::TypeTorrent, loaderTorrent);
 #endif
 
     //---------------------------------------------------------------------------------------------
@@ -219,16 +261,13 @@ ControllerCore::ControllerCore() : WController()
 
     _player = new WPlayer(this);
 
-    _player->setBackend(new WBackendTorrent);
+#ifdef SK_NO_TORRENT
+    WBackendManager * backend = new WBackendManager;
+#else
+    WBackendTorrent * backend = new WBackendTorrent;
+#endif
 
-    _player->setOutput(WAbstractBackend::OutputAudio);
-
-    connect(_player, SIGNAL(ended()), this, SLOT(quit()));
-
-    if (_end != -1)
-    {
-        connect(_player, SIGNAL(currentTimeChanged()), this, SLOT(onCurrentTime()));
-    }
+    _player->setBackend(backend);
 
     return true;
 }
@@ -274,23 +313,63 @@ void ControllerCore::help() const
           "--end=<time>           Track end time    (00:00:00.000 format) (overrides duration)\n"
           "--duration=<time>      Playback duration (00:00:00.000 format)\n"
           "\n"
-          "--backend=<string>     Select a backend based on its name in lowercase\n"
-          "                       (defaults to duckduckgo)");
+          "--backend=<string>     Set a backend based on its name in lowercase\n"
+          "                       (defaults to duckduckgo)\n"
+          "\n"
+          "--screen=<string>      Set a tevolution screen based on its magic number\n"
+          "                       (xxx-xxx-xxx-xxx)\n"
+          "--output=<string>      Set the output type (media, audio, video)\n"
+          "                       (defaults to media)\n"
+          "--quality=<string>     Set the quality (144, 240, 360, 480, 720, 1080, 1440, 2160)\n"
+          "                       (defaulst to 720)");
 }
 
 void ControllerCore::play(const QString & source)
 {
-    _player->setSource(source);
+    if (_screen.isEmpty())
+    {
+        _player->setOutput(WAbstractBackend::OutputAudio);
 
-    _player->seek(_at);
+        _player->setQuality(_quality);
 
-    _player->play();
+        _player->setSource(source);
+
+        _player->seek(_at);
+
+        _player->play();
+    }
+    else
+    {
+        QList<WAbstractHook *> list;
+
+        _hook = new WHookOutput(_player->backend());
+
+        connect(_hook, SIGNAL(connectedChanged()), this, SLOT(onConnected()));
+
+        list.append(_hook);
+
+        _player->setHooks(list);
+
+        _hook->connectToHost(_screen);
+
+        _player->setOutput(_output);
+
+        _player->setQuality(_quality);
+
+        _player->setSource(source);
+
+        _player->seek(_at);
+    }
+
+    connect(_player, SIGNAL(ended()), this, SLOT(quit()));
 
     connect(_player, SIGNAL(stateLoadChanged()), this, SLOT(onStateLoadChanged()));
 
     signal(SIGINT, onInterrupt);
 
     if (_end == -1) return;
+
+    connect(_player, SIGNAL(currentTimeChanged()), this, SLOT(onCurrentTime()));
 
     _timer.setSingleShot(true);
 
@@ -359,6 +438,15 @@ int ControllerCore::extractMsecs(const QString & text) const
         return -1;
     }
     else return qMax(0, msecs);
+}
+
+QString ControllerCore::getText(const QString & text) const
+{
+    if (text.isEmpty())
+    {
+        return "default";
+    }
+    else return text;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -489,6 +577,15 @@ void ControllerCore::onCurrentTime()
     if (time < _end)
     {
         _timer.start(_end - time);
+    }
+    else quit();
+}
+
+void ControllerCore::onConnected()
+{
+    if (_hook->isConnected())
+    {
+        _player->play();
     }
     else quit();
 }
