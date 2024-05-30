@@ -68,7 +68,7 @@ Play Billie Jean by Michael Jackson:
 
 Play a Youtube video:
 
-    tevo https://www.youtube.com/watch?v=Zi_XLOBDo_Y
+    tevo "https://www.youtube.com/watch?v=Zi_XLOBDo_Y"
 
 Play a BitTorrent magnet:
 
@@ -76,8 +76,8 @@ Play a BitTorrent magnet:
 
 Play a local file:
 
-    tevo file:///folder/video.mp4
-    
+    tevo "file:///folder/video.mp4"
+
 Play Billie Jean on a remote [tevolution](https://omega.gg/tevolution) screen:
 
     tevo "billie jean" --screen=123-123-123-123
