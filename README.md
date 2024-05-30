@@ -77,14 +77,14 @@ Play a BitTorrent magnet:
 Play a local file:
 
     tevo file:///folder/video.mp4
+    
+Play a media on a remote [tevolution](https://omega.gg/tevolution) screen:
+
+    tevo "billie jean" --screen=123-123-123-123
 
 Play Billie Jean in 1080p from 1:10 to 2:20:
 
     tevo "billie jean" --quality=1080 --at=1:10 --end=2:10
-
-Play a media on a remote [tevolution](https://omega.gg/tevolution) screen:
-
-    tevo "billie jean" --screen=123-123-123-123
 
 ## Technology
 
