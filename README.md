@@ -60,6 +60,16 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
     --quality=<string>     Set the quality (144, 240, 360, 480, 720, 1080, 1440, 2160)
                            (defaults to 720)
 
+## Example
+
+Play "Billie Jean" by Michael Jackson:
+
+    ./tevo "billie jean"
+
+Play a Youtube video:
+
+    ./tevo https://www.youtube.com/watch?v=Zi_XLOBDo_Y
+
 ## Technology
 
 tevo is built in C++ with [Sky kit](https://omega.gg/Sky/sources).<br>
