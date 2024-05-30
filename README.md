@@ -62,13 +62,17 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Example
 
-Play "Billie Jean" by Michael Jackson:
+Play Billie Jean by Michael Jackson:
 
     ./tevo "billie jean"
 
 Play a Youtube video:
 
     ./tevo https://www.youtube.com/watch?v=Zi_XLOBDo_Y
+
+Play a local video:
+
+    ./tevo file:///folder/video.mp4
 
 ## Technology
 
