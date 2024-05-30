@@ -80,7 +80,7 @@ Play a local file:
 
 Play Billie Jean in 1080p from 1:10 to 2:20:
 
-    ./tevo "billie jean" --at=1:10 --end=2:10 --quality=1080
+    ./tevo "billie jean" --quality=1080 --at=1:10 --end=2:10
 
 ## Technology
 
