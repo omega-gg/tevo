@@ -41,7 +41,7 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Options
 
-    --help                 Print the help
+    --help                 Show the help
 
     --verbose,             Print debug informations
     --quiet                Mute application output
