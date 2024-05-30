@@ -303,6 +303,9 @@ void ControllerCore::quit()
 
 void ControllerCore::usage() const
 {
+    // NOTE: Create the storage folder to save the logs.
+    QDir().mkpath(_path);
+
     qInfo("Usage: tevo <text> [options]\n"
           "\n"
           "tevo --help for more informations");
@@ -310,6 +313,9 @@ void ControllerCore::usage() const
 
 void ControllerCore::help() const
 {
+    // NOTE: Create the storage folder to save the logs.
+    QDir().mkpath(_path);
+
     qInfo("tevo %s\n", sk->version().C_STR);
 
     qInfo("Usage: tevo <text> [options]\n"
@@ -331,7 +337,7 @@ void ControllerCore::help() const
           "--output=<string>      Set the output type (media, audio, video)\n"
           "                       (defaults to media)\n"
           "--quality=<string>     Set the quality (144, 240, 360, 480, 720, 1080, 1440, 2160)\n"
-          "                       (defaulst to 720)");
+          "                       (defaults to 720)");
 }
 
 void ControllerCore::play(const QString & source)
