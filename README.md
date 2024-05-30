@@ -60,7 +60,7 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
     --quality=<string>     Set the quality (144, 240, 360, 480, 720, 1080, 1440, 2160)
                            (defaults to 720)
 
-## Example
+## Examples
 
 Play Billie Jean by Michael Jackson:
 
