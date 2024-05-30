@@ -36,6 +36,7 @@
 #include <WControllerPlaylist>
 #include <WControllerMedia>
 #include <WControllerTorrent>
+#include <WCache>
 #include <WLoaderVbml>
 #include <WLoaderTorrent>
 #include <WBackendIndex>
@@ -51,6 +52,8 @@ W_INIT_CONTROLLER(ControllerCore)
 // Static variables
 
 static const QString CORE_VERSION = "1.0.0-0";
+
+static const int CORE_CACHE = 1048576 * 100; // 100 megabytes
 
 // NOTE: Defaut streaming port for tevo.
 static const int CORE_PORT = 8400;
@@ -230,6 +233,13 @@ ControllerCore::ControllerCore() : WController()
 #ifndef SK_NO_TORRENT
     W_CREATE_CONTROLLER_2(WControllerTorrent, _path + "/torrents", CORE_PORT);
 #endif
+
+    //---------------------------------------------------------------------------------------------
+    // Cache
+
+    WCache * cache = new WCache(_path + "/cache", CORE_CACHE);
+
+    wControllerFile->setCache(cache);
 
     //---------------------------------------------------------------------------------------------
     // LoaderVbml
