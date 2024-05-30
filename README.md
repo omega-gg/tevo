@@ -70,7 +70,11 @@ Play a Youtube video:
 
     ./tevo https://www.youtube.com/watch?v=Zi_XLOBDo_Y
 
-Play a local video:
+Play a BitTorrent magnet:
+
+    ./tevo "magnet:?xt=urn:btih:88594aaacbde40ef3e2510c47374ec0aa396c08e"
+
+Play a local file:
 
     ./tevo file:///folder/video.mp4
 
