@@ -294,6 +294,10 @@ ControllerCore::ControllerCore() : WController()
 
 void ControllerCore::quit()
 {
+    disconnect(_player, 0, this, 0);
+
+    if (_playlist) disconnect(_playlist, 0, this, 0);
+
     if (_player && _player->isPlaying())
     {
         qInfo("Stopped at %s",
