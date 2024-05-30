@@ -53,7 +53,7 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
     --backend=<string>     Set a backend based on its name in lowercase
                            (defaults to duckduckgo)
 
-    --screen=<string>      Set a tevolution screen based on its magic number
+    --screen=<string>      Set a [tevolution](https://omega.gg/tevolution) screen based on its magic number
                            (xxx-xxx-xxx-xxx)
     --output=<string>      Set the output type (media, audio, video)
                            (defaults to media)
