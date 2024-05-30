@@ -62,21 +62,25 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Example
 
-Play Billie Jean by Michael Jackson:
+Play Billie Jean by Michael Jackson
 
     ./tevo "billie jean"
 
-Play a Youtube video:
+Play a Youtube video
 
     ./tevo https://www.youtube.com/watch?v=Zi_XLOBDo_Y
 
-Play a BitTorrent magnet:
+Play a BitTorrent magnet
 
     ./tevo "magnet:?xt=urn:btih:88594aaacbde40ef3e2510c47374ec0aa396c08e"
 
-Play a local file:
+Play a local file
 
     ./tevo file:///folder/video.mp4
+
+Play Billie Jean in 1080p from 1:10 to 2:20
+
+    ./tevo "billie jean" --at=1:10 --end=2:10 --quality=1080
 
 ## Technology
 
