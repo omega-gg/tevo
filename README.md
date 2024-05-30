@@ -78,7 +78,7 @@ Play a local file:
 
     tevo file:///folder/video.mp4
     
-Play a media on a remote [tevolution](https://omega.gg/tevolution) screen:
+Play Billie Jean on a remote [tevolution](https://omega.gg/tevolution) screen:
 
     tevo "billie jean" --screen=123-123-123-123
 
