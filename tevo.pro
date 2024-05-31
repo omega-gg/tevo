@@ -150,3 +150,4 @@ OTHER_FILES += 3rdparty.sh \
                content/generate.sh \
                dist/tevo.rc \
                dist/script/start.sh \
+               dist/changes/1.1.0.md \
