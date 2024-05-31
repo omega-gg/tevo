@@ -35,10 +35,15 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Get tevo
 
-- Linux 64 bit: [tevo-1.0.0-0-linux64.tar.gz](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-linux64.tar.gz)
-- macOS: [tevo-1.0.0-0-macOS.dmg](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-macOS.dmg)
-- Windows 64 bit: [tevo-1.0.0-0-win64](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-win64.zip)
-- Windows 32 bit: [tevo-1.0.0-0-win32](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-win32.zip)
+- Linux:
+    - [tevo-1.0.0-0-linux64.tar.gz](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-linux64.tar.gz)
+
+- macOS:
+    - [tevo-1.0.0-0-macOS.dmg](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-macOS.dmg)
+
+- Windows:
+    - [tevo-1.0.0-0-win64](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-win64.zip)
+    - [tevo-1.0.0-0-win32](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-win32.zip)
 
 ## Usage
 
