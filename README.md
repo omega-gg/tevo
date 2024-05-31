@@ -35,7 +35,7 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
 
 ## Download
 
-Get the application on our [release page] (https://github.com/omega-gg/tevo/releases)
+Get the application on our [release page](https://github.com/omega-gg/tevo/releases).
 
 ## Usage
 
