@@ -33,15 +33,15 @@ It supports [DuckDuckGo](https://en.wikipedia.org/wiki/DuckDuckGo),
             [Last.fm](https://en.wikipedia.org/wiki/Lastfm) and
             [SoundCloud](https://en.wikipedia.org/wiki/SoundCloud).<br>
 
-## Get tevo
+## Download
 
-- Linux:
+- Linux
     - [tevo-1.0.0-0-linux64.tar.gz](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-linux64.tar.gz)
 
-- macOS:
+- macOS
     - [tevo-1.0.0-0-macOS.dmg](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-macOS.dmg)
 
-- Windows:
+- Windows
     - [tevo-1.0.0-0-win64](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-win64.zip)
     - [tevo-1.0.0-0-win32](https://github.com/omega-gg/tevo/releases/download/1.0.0-0/tevo-1.0.0-0-win32.zip)
 
