@@ -32,7 +32,7 @@ jobs:
 
 - job: macOS_qt5
   pool:
-    vmImage: "macOS-11"
+    vmImage: "macOS-12"
   steps:
   - bash: |
       sh build.sh macOS all
@@ -43,7 +43,7 @@ jobs:
 
 - job: macOS_qt6
   pool:
-    vmImage: "macOS-11"
+    vmImage: "macOS-12"
   steps:
   - bash: |
       sh environment.sh qt6
