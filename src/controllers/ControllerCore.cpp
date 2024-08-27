@@ -546,7 +546,7 @@ void ControllerCore::onIndexUpdated()
 
             query = _text.trimmed();
         }
-        else query = _text.mid(id.length() + 1).trimmed();
+        else query = WControllerPlaylist::queryFromText(_text, id).trimmed();
     }
     else
     {
