@@ -518,6 +518,13 @@ void ControllerCore::onIndexUpdated()
     // NOTE: We don't want this slot to be called again.
     disconnect(_index, 0, this, SLOT(onIndexUpdated()));
 
+    if (WControllerNetwork::textIsUri(_text))
+    {
+        play(_text);
+
+        return;
+    }
+
     QString id;
 
     QString query;
@@ -528,13 +535,6 @@ void ControllerCore::onIndexUpdated()
 
         if (id.isEmpty())
         {
-            if (WControllerNetwork::textIsUri(_text))
-            {
-                play(_text);
-
-                return;
-            }
-
             id = wControllerPlaylist->backendSearchId();
 
             if (id.isEmpty())
