@@ -518,35 +518,53 @@ void ControllerCore::onIndexUpdated()
     // NOTE: We don't want this slot to be called again.
     disconnect(_index, 0, this, SLOT(onIndexUpdated()));
 
-    if (WControllerNetwork::textIsUri(_text) == false)
-    {
-        QString id;
+    QString id;
 
-        if (_backend.isEmpty())
+    QString query;
+
+    if (_backend.isEmpty())
+    {
+        id = wControllerPlaylist->backendIdFromText(_text);
+
+        if (id.isEmpty())
         {
+            if (WControllerNetwork::textIsUri(_text))
+            {
+                play(_text);
+
+                return;
+            }
+
             id = wControllerPlaylist->backendSearchId();
 
             if (id.isEmpty())
             {
-                 quit();
+                quit();
 
-                 return;
+                return;
             }
+
+            query = _text.trimmed();
         }
-        else id = _backend;
-
-        createPlaylist();
-
-        connect(_playlist, SIGNAL(queryEnded    ()), this, SLOT(onQueryEnded    ()));
-        connect(_playlist, SIGNAL(queryCompleted()), this, SLOT(onQueryCompleted()));
-
-        QString source = WControllerPlaylist::createSource(id, "search", "tracks", _text);
-
-        if (_playlist->loadSource(source)) return;
-
-        quit();
+        else query = _text.mid(id.length() + 1).trimmed();
     }
-    else play(_text);
+    else
+    {
+        id = _backend;
+
+        query = _text.trimmed();
+    }
+
+    createPlaylist();
+
+    connect(_playlist, SIGNAL(queryEnded    ()), this, SLOT(onQueryEnded    ()));
+    connect(_playlist, SIGNAL(queryCompleted()), this, SLOT(onQueryCompleted()));
+
+    QString source = WControllerPlaylist::createSource(id, "search", "tracks", query);
+
+    if (_playlist->loadSource(source)) return;
+
+    quit();
 }
 
 void ControllerCore::onQueryEnded()
