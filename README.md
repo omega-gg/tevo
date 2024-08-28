@@ -39,9 +39,10 @@ Get the application on the [release page](https://github.com/omega-gg/tevo/relea
 
 ## Usage
 
-    tevo <text> [options]
+    tevo <[backend] text> [options]
 
-    Where <text> is the query or resource you want to play.
+    Where <text> is the query or resource you want to play and [backend] the optional backend id to
+    search from.
 
 ## Options
 
