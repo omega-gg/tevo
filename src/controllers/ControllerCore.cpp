@@ -59,7 +59,7 @@ static const int CORE_CACHE = 1048576 * 100; // 100 megabytes
 static const int CORE_PORT = 8400;
 
 #ifndef SK_DEPLOY
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
 static const QString PATH_STORAGE = "/../../../storage";
 static const QString PATH_BACKEND = "../../../../../backend";
 #else
