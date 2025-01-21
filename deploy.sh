@@ -133,6 +133,11 @@ if [ $os = "windows" ]; then
         cp "$path"/QtXml4.dll         $deploy
         cp "$path"/QtXmlPatterns4.dll $deploy
     else
+        if [ $qt = "qt6" ]; then
+
+            mkdir -p $deploy/tls
+        fi
+
         cp "$path/$QtX"Core.dll    $deploy
         cp "$path/$QtX"Gui.dll     $deploy
         cp "$path/$QtX"Network.dll $deploy
@@ -144,12 +149,20 @@ if [ $os = "windows" ]; then
             cp "$path/$QtX"XmlPatterns.dll $deploy
         else
             cp "$path/$QtX"Core5Compat.dll $deploy
+
+            cp "$path"/tls/qopensslbackend.dll  $deploy/tls
+            cp "$path"/tls/qschannelbackend.dll $deploy/tls
         fi
     fi
 
 elif [ $1 = "macOS" ]; then
 
     if [ $qt != "qt4" ]; then
+
+        if [ $qt = "qt6" ]; then
+
+            mkdir -p $deploy/tls
+        fi
 
         # FIXME Qt 5.14 macOS: We have to copy qt.conf to avoid a segfault.
         cp "$path"/qt.conf $deploy
@@ -165,6 +178,8 @@ elif [ $1 = "macOS" ]; then
             cp "$path"/QtXmlPatterns.dylib $deploy
         else
             cp "$path"/QtCore5Compat.dylib $deploy
+
+            cp "$path"/tls/libqopensslbackend.dylib $deploy/tls
         fi
     fi
 
@@ -179,6 +194,11 @@ elif [ $1 = "linux" ]; then
         cp "$path"/libQtXml.so.4         $deploy
         cp "$path"/libQtXmlPatterns.so.4 $deploy
     else
+        if [ $qt = "qt6" ]; then
+
+            mkdir -p $deploy/tls
+        fi
+
         cp "$path"/libicudata.so.* $deploy
         cp "$path"/libicui18n.so.* $deploy
         cp "$path"/libicuuc.so.*   $deploy
@@ -194,6 +214,8 @@ elif [ $1 = "linux" ]; then
             cp "$path/lib$QtX"XmlPatterns.so.$qx $deploy
         else
             cp "$path/lib$QtX"Core5Compat.so.$qx $deploy
+
+            cp "$path"/tls/libqopensslbackend.so $deploy/tls
         fi
     fi
 
