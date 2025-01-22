@@ -280,6 +280,11 @@ elif [ $1 = "linux" ]; then
     cp -r "$path"/vlc $deploy
 
     cp "$path"/libvlc*.so* $deploy
+
+    if [ -f "$path"/libidn.so* ]; then
+
+        cp "$path"/libidn.so* $deploy
+    fi
 fi
 
 #--------------------------------------------------------------------------------------------------
