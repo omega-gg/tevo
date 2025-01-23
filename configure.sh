@@ -10,20 +10,6 @@ Sky="../Sky"
 external="../3rdparty"
 
 #--------------------------------------------------------------------------------------------------
-
-SSL_versionA="1.0.2u"
-SSL_versionB="1.1.1s"
-
-VLC_version="3.0.21"
-
-libtorrent_version="2.0.10"
-
-#--------------------------------------------------------------------------------------------------
-# Windows
-
-MinGW_version="13.1.0"
-
-#--------------------------------------------------------------------------------------------------
 # environment
 
 compiler_win="mingw"
@@ -58,9 +44,9 @@ if [ $# != 1 -a $# != 2 ] \
    || \
    [ $1 != "win32" -a $1 != "win64" -a $1 != "macOS" -a $1 != "linux" -a $1 != "android" ] \
    || \
-   [ $# = 2 -a "$2" != "sky" -a "$2" != "clean" ]; then
+   [ $# = 2 -a "$2" != "clean" ]; then
 
-    echo "Usage: configure <win32 | win64 | macOS | linux | android> [sky | clean]"
+    echo "Usage: configure <win32 | win64 | macOS | linux | android> [clean]"
 
     exit 1
 fi
@@ -76,29 +62,13 @@ if [ $1 = "win32" -o $1 = "win64" ]; then
     os="windows"
 
     compiler="$compiler_win"
-
-    if [ $compiler = "mingw" ]; then
-
-        MinGW="$external/MinGW/$MinGW_version/bin"
-    fi
 else
     os="default"
 
     compiler="default"
 fi
 
-#--------------------------------------------------------------------------------------------------
-
-if [ $qt = "qt4" ]; then
-
-    SSL="$external/OpenSSL/$SSL_versionA"
-else
-    SSL="$external/OpenSSL/$SSL_versionB"
-fi
-
-VLC="$external/VLC/$VLC_version"
-
-libtorrent="$external/libtorrent/$libtorrent_version"
+deploy="$Sky/deploy"
 
 #--------------------------------------------------------------------------------------------------
 # Clean
@@ -141,25 +111,6 @@ if [ "$2" = "clean" ]; then
 fi
 
 #--------------------------------------------------------------------------------------------------
-# Sky
-#--------------------------------------------------------------------------------------------------
-
-if [ "$2" = "sky" ]; then
-
-    echo "CONFIGURING Sky"
-    echo "---------------"
-
-    cd "$Sky"
-
-    sh configure.sh $1
-
-    cd -
-
-    echo "---------------"
-    echo ""
-fi
-
-#--------------------------------------------------------------------------------------------------
 # MinGW
 #--------------------------------------------------------------------------------------------------
 
@@ -168,9 +119,11 @@ echo "----------------"
 
 if [ $compiler = "mingw" ]; then
 
-    cp "$MinGW"/libgcc_s_*-1.dll    bin
-    cp "$MinGW"/libstdc++-6.dll     bin
-    cp "$MinGW"/libwinpthread-1.dll bin
+    echo "COPYING MinGW"
+
+    cp "$deploy"/libgcc_s_*-1.dll    bin
+    cp "$deploy"/libstdc++-6.dll     bin
+    cp "$deploy"/libwinpthread-1.dll bin
 fi
 
 #--------------------------------------------------------------------------------------------------
@@ -181,13 +134,20 @@ if [ $os = "windows" ]; then
 
     echo "COPYING SSL"
 
-    cp "$SSL"/*.dll bin
+    if [ $qt = "qt4" ]; then
+
+        cp "$deploy"/libeay32.dll bin
+        cp "$deploy"/ssleay32.dll bin
+    else
+        cp "$deploy"/libssl*.dll    bin
+        cp "$deploy"/libcrypto*.dll bin
+    fi
 
 elif [ $1 = "android" ]; then
 
     echo "COPYING SSL"
 
-    copyAndroid "$SSL"
+    copyAndroid "$deploy"/ssl
 fi
 
 #--------------------------------------------------------------------------------------------------
@@ -201,9 +161,9 @@ if [ $os = "windows" ]; then
     rm -rf bin/plugins
     mkdir  bin/plugins
 
-    cp -r "$VLC"/plugins bin
+    cp -r "$deploy"/plugins bin
 
-    cp "$VLC"/libvlc*.dll bin
+    cp "$deploy"/libvlc*.dll bin
 
 elif [ $1 = "macOS" ]; then
 
@@ -212,10 +172,9 @@ elif [ $1 = "macOS" ]; then
     rm -rf bin/plugins
     mkdir  bin/plugins
 
-    cp -r "$VLC"/plugins/*.dylib bin/plugins
+    cp -r "$deploy"/plugins bin
 
-    cp "$VLC"/lib/libvlc.5.dylib     bin/libvlc.dylib
-    cp "$VLC"/lib/libvlccore.9.dylib bin/libvlccore.dylib
+    cp "$deploy"/libvlc*.dylib bin
 
 elif [ $1 = "linux" ]; then
 
@@ -224,26 +183,86 @@ elif [ $1 = "linux" ]; then
     rm -rf bin/vlc
     mkdir  bin/vlc
 
-    cp -r "$VLC"/vlc bin
+    cp -r "$deploy"/vlc bin
 
-    cp "$VLC"/lib*.so.* bin
+    cp "$deploy"/libvlc*.so* bin
+
+    if [ -f "$deploy"/libidn.so* ]; then
+
+        cp "$deploy"/libidn.so* bin
+    fi
 
 elif [ $1 = "android" ]; then
 
     echo "COPYING VLC"
 
-    copyAndroid "$VLC"
+    copyAndroid "$deploy"/vlc
 fi
 
 #--------------------------------------------------------------------------------------------------
 # libtorrent
 #--------------------------------------------------------------------------------------------------
 
-if [ $1 = "android" ]; then
+if [ $os = "windows" ]; then
 
-    echo "COPYING libtorrent"
+    echo "COPYING VLC"
 
-    copyAndroid "$libtorrent"
+    rm -rf bin/plugins
+    mkdir  bin/plugins
+
+    cp -r "$deploy"/plugins bin
+
+    cp "$deploy"/libvlc*.dll bin
+
+elif [ $1 = "macOS" ]; then
+
+    echo "COPYING VLC"
+
+    rm -rf bin/plugins
+    mkdir  bin/plugins
+
+    cp -r "$deploy"/plugins bin
+
+    cp "$deploy"/libvlc*.dylib bin
+
+elif [ $1 = "linux" ]; then
+
+    echo "COPYING VLC"
+
+    rm -rf bin/vlc
+    mkdir  bin/vlc
+
+    cp -r "$deploy"/vlc bin
+
+    cp "$deploy"/libvlc*.so* bin
+
+    if [ -f "$deploy"/libidn.so* ]; then
+
+        cp "$deploy"/libidn.so* bin
+    fi
+
+elif [ $1 = "android" ]; then
+
+    echo "COPYING VLC"
+
+    copyAndroid "$deploy"/vlc
+fi
+
+#--------------------------------------------------------------------------------------------------
+# Boost
+#--------------------------------------------------------------------------------------------------
+
+if [ $1 = "macOS" ]; then
+
+    echo "COPYING Boost"
+
+    cp "$deploy"/libboost*.dylib bin
+
+elif [ $1 = "linux" ]; then
+
+    echo "COPYING Boost"
+
+    cp "$deploy"/libboost*.so* bin
 fi
 
 echo "----------------"
