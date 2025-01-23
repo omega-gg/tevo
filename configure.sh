@@ -249,6 +249,35 @@ elif [ $1 = "android" ]; then
 fi
 
 #--------------------------------------------------------------------------------------------------
+# libtorrent
+#--------------------------------------------------------------------------------------------------
+
+if [ $os = "windows" ]; then
+
+    echo "COPYING libtorrent"
+
+    cp "$deploy"/*torrent-rasterbar.dll bin
+
+elif [ $1 = "macOS" ]; then
+
+    echo "COPYING libtorrent"
+
+    cp "$deploy"/libtorrent-rasterbar.dylib bin
+
+elif [ $1 = "linux" ]; then
+
+    echo "COPYING libtorrent"
+
+    cp "$deploy"/libtorrent-rasterbar*.so* bin
+
+elif [ $1 = "android" ]; then
+
+    echo "COPYING libtorrent"
+
+    copyAndroid "$deploy"/libtorrent
+fi
+
+#--------------------------------------------------------------------------------------------------
 # Boost
 #--------------------------------------------------------------------------------------------------
 
