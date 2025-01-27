@@ -104,9 +104,14 @@ unix:!ios:!android:LIBS += -L$$SK/lib -lvlc \
                            -L$$SK/lib -ltorrent-rasterbar \
                            -L$$SK/lib -lboost_system
 
+vlc4 {
+    ios:LIBS += -framework VLCKit
+} else {
+    ios:LIBS += -framework MobileVLCKit
+}
+
 # NOTE iOS: MediaPlayer is required for MP* classes.
-ios:LIBS += -framework MobileVLCKit \
-            -framework MediaPlayer
+ios:LIBS += -framework MediaPlayer
 
 android:LIBS += -L$$ANDROID_LIB -lvlc \
                 -L$$ANDROID_LIB -ltorrent-rasterbar \
