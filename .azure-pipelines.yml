@@ -14,12 +14,12 @@ jobs:
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-win32-qt5
 
-# NOTE: Running test(s) on this build.
-- job: win64_qt5
+- job: win64_qt6
   pool:
     vmImage: "windows-latest"
   steps:
   - bash: |
+      sh environment.sh qt6
       sh build.sh win64 all
       cd deploy
       7z a ../tevo.zip *
@@ -107,29 +107,28 @@ jobs:
   pool:
     vmImage: "ubuntu-latest"
   steps:
-  # NOTE: We need an older version to package the application.
   - bash: |
-      docker run -d --name ubuntu -v $PWD:/tevo amd64/ubuntu:18.04 tail -f /dev/null
-      docker exec -t ubuntu bash -c "cd /tevo;
-                                     apt-get update;
-                                     apt-get -y install sudo curl zip git;
-                                     sh build.sh linux all;
-                                     cd deploy;
-                                     zip -rq ../tevo.zip *"
+      sh build.sh linux all
+      cd deploy
+      zip -rq ../tevo.zip *
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux64-qt5
-
-#--------------------------------------------------------------------------------------------------
 
 - job: linux64_qt6
   pool:
     vmImage: "ubuntu-latest"
   steps:
+  # NOTE: We need an older version to package the application.
+  # NOTE Qt6: Ubuntu 20.04 is required for glibc.
   - bash: |
-      sh environment.sh qt6
-      sh build.sh linux all
-      cd deploy
-      zip -rq ../tevo.zip *
+      docker run -d --name ubuntu -v $PWD:/tevo amd64/ubuntu:20.04 tail -f /dev/null
+      docker exec -t ubuntu bash -c "cd /tevo;
+                                     apt-get update;
+                                     apt-get -y install sudo curl zip git;
+                                     sh environment.sh qt6;
+                                     sh build.sh linux all;
+                                     cd deploy;
+                                     zip -rq ../tevo.zip *"
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux64-qt6
 
