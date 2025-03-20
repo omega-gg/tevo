@@ -179,7 +179,8 @@ elif [ $1 = "macOS" ]; then
         else
             cp "$path"/QtCore5Compat.dylib $deploy
 
-            cp "$path"/tls/libqopensslbackend.dylib $deploy/tls
+            cp "$path"/tls/libqopensslbackend.dylib         $deploy/tls
+            cp "$path"/tls/libqsecuretransportbackend.dylib $deploy/tls
         fi
     fi
 
