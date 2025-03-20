@@ -172,6 +172,7 @@ elif [ $1 = "macOS" ]; then
         cp "$path"/QtNetwork.dylib $deploy
         cp "$path"/QtQml.dylib     $deploy
         cp "$path"/QtXml.dylib     $deploy
+        cp "$path"/QtDBus.dylib    $deploy
 
         if [ $qt = "qt5" ]; then
 
