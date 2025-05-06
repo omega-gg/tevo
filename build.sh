@@ -367,9 +367,9 @@ if [ "$2" = "deploy" ]; then
 
     echo ""
     echo "DEPLOYING $target"
-    echo "--------------------"
+    echo "--------------"
 
     sh deploy.sh $1
 
-    echo "--------------------"
+    echo "--------------"
 fi
