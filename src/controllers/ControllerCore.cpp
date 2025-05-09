@@ -235,6 +235,13 @@ ControllerCore::ControllerCore() : WController()
 #endif
 
     //---------------------------------------------------------------------------------------------
+    // Log
+
+#ifndef SK_DEPLOY
+    wControllerMedia->startLog();
+#endif
+
+    //---------------------------------------------------------------------------------------------
     // Cache
 
     WCache * cache = new WCache(_path + "/cache", CORE_CACHE);
