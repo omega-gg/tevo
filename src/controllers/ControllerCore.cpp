@@ -444,14 +444,14 @@ WControllerFileReply * ControllerCore::copyBackends() const
 {
 #ifdef SK_DEPLOY
 #ifdef Q_OS_ANDROID
-    return WControllerPlaylist::copyBackends("assets:/backend", _path + "/backend/");
+    return WControllerPlaylist::copyBackends("assets:/backend", _path + "/backend");
 #else
     return WControllerPlaylist::copyBackends(WControllerFile::applicationPath("backend"),
-                                             _path + "/backend/");
+                                             _path + "/backend");
 #endif
 #else
     return WControllerPlaylist::copyBackends(WControllerFile::applicationPath(PATH_BACKEND),
-                                             _path + "/backend/");
+                                             _path + "/backend");
 #endif
 }
 
