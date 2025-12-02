@@ -43,9 +43,11 @@ int main(int argc, char * argv[])
 
     W_CREATE_CONTROLLER(ControllerCore);
 
-    if (core->run(argc, argv))
+    int code = core->run(argc, argv);
+
+    if (code == -1)
     {
         return application->exec();
     }
-    else return 1;
+    else return code;
 }

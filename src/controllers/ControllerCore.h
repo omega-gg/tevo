@@ -48,7 +48,7 @@ private:
     ControllerCore();
 
 public: // Interface
-    Q_INVOKABLE bool run(int & argc, char ** argv);
+    Q_INVOKABLE int run(int & argc, char ** argv);
 
     Q_INVOKABLE void quit();
 

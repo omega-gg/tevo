@@ -94,7 +94,7 @@ ControllerCore::ControllerCore() : WController()
 // Interface
 //-------------------------------------------------------------------------------------------------
 
-/* Q_INVOKABLE */ bool ControllerCore::run(int & argc, char ** argv)
+/* Q_INVOKABLE */ int ControllerCore::run(int & argc, char ** argv)
 {
     _playlist = NULL;
 
@@ -131,7 +131,7 @@ ControllerCore::ControllerCore() : WController()
             {
                 help();
 
-                return false;
+                return 0;
             }
             else if (name == "verbose")
             {
@@ -201,7 +201,7 @@ ControllerCore::ControllerCore() : WController()
     {
         usage();
 
-        return false;
+        return 1;
     }
 
     if (verbosity == QtDebugMsg)
@@ -274,7 +274,7 @@ ControllerCore::ControllerCore() : WController()
         {
              qWarning("ControllerCore::run: Failed to create folder %s.", path.C_STR);
 
-             return false;
+             return 1;
         }
 
         WControllerFileReply * reply = copyBackends();
@@ -296,7 +296,7 @@ ControllerCore::ControllerCore() : WController()
 
     _player->setBackend(backend);
 
-    return true;
+    return -1;
 }
 
 void ControllerCore::quit()
@@ -341,7 +341,7 @@ void ControllerCore::help() const
 
     qInfo("Usage: tevo <text> [options]\n"
           "\n"
-          "--help                 Print this text\n"
+          "--help                 Print the help\n"
           "\n"
           "--verbose,             Print debug informations\n"
           "--quiet                Mute application output\n"
