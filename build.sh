@@ -13,7 +13,7 @@ external="$PWD/../3rdparty"
 
 Qt4_version="4.8.7"
 Qt5_version="5.15.2"
-Qt6_version="6.8.3"
+Qt6_version="6.10.1"
 
 #--------------------------------------------------------------------------------------------------
 
@@ -24,22 +24,22 @@ make_arguments="-j 4"
 
 ProgramFiles="/c/Program Files (x86)"
 
-BuildTools="$ProgramFiles/Microsoft Visual Studio/2019/BuildTools"
+BuildTools="$ProgramFiles/Microsoft Visual Studio/2022/BuildTools"
 
 #--------------------------------------------------------------------------------------------------
 
 MinGW_version="13.1.0"
 
-jom_version="1.1.3"
+jom_version="1.1.5"
 
-MSVC_version="14"
+MSVC_version="15"
 
 WindowsKit_version="10"
 
 #--------------------------------------------------------------------------------------------------
 # Android
 
-SDK_version="34"
+SDK_version="35"
 SDK_version_minimum="24"
 
 #--------------------------------------------------------------------------------------------------
