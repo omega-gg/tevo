@@ -1,6 +1,6 @@
 //=================================================================================================
 /*
-    Copyright (C) 2015-2020 tevo authors united with omega. <http://omega.gg/about>
+    Copyright (C) 2024-2026 tevo authors united with omega. <http://omega.gg/about>
 
     Author: Benjamin Arnaud. <http://bunjee.me> <bunjee@omega.gg>
 
