@@ -18,6 +18,8 @@ compiler_win="mingw"
 
 qt="qt6"
 
+player="ffmpeg"
+
 #--------------------------------------------------------------------------------------------------
 # Functions
 #--------------------------------------------------------------------------------------------------
@@ -118,6 +120,13 @@ elif [ $qt = "qt6" ]; then
     fi
 fi
 
+if [ $player = "ffmpeg" -a $qt = "qt6" ]; then
+
+    engine="ffmpeg"
+else
+    engine="vlc"
+fi
+
 # NOTE windows: Ensure we use the proper find.
 if [ -x /usr/bin/find ]; then
 
@@ -210,6 +219,12 @@ if [ $os = "windows" ]; then
         else
             cp "$path/$QtX"Core5Compat.dll $deploy
 
+            # NOTE: FFmpeg plays its audio through Qt Multimedia.
+            if [ $engine = "ffmpeg" ]; then
+
+                cp "$path/$QtX"Multimedia.dll $deploy
+            fi
+
             cp "$path"/tls/qopensslbackend.dll  $deploy/tls
             cp "$path"/tls/qschannelbackend.dll $deploy/tls
         fi
@@ -239,6 +254,11 @@ elif [ $1 = "macOS" ]; then
             cp "$path"/QtXmlPatterns.dylib $deploy
         else
             cp "$path"/QtCore5Compat.dylib $deploy
+
+            if [ $engine = "ffmpeg" ]; then
+
+                cp "$path"/QtMultimedia.dylib $deploy
+            fi
 
             cp "$path"/tls/libqopensslbackend.dylib         $deploy/tls
             cp "$path"/tls/libqsecuretransportbackend.dylib $deploy/tls
@@ -277,6 +297,11 @@ elif [ $1 = "linux" ]; then
         else
             cp "$path/lib$QtX"Core5Compat.so.$qx $deploy
 
+            if [ $engine = "ffmpeg" ]; then
+
+                cp "$path/lib$QtX"Multimedia.so.$qx $deploy
+            fi
+
             cp "$path"/tls/libqopensslbackend.so $deploy/tls
         fi
     fi
@@ -296,6 +321,11 @@ elif [ $1 = "android" ]; then
             cp "$path/lib$QtX"XmlPatterns_*.so $deploy
         else
             cp "$path/lib$QtX"Core5Compat_*.so $deploy
+
+            if [ $engine = "ffmpeg" ]; then
+
+                cp "$path/lib$QtX"Multimedia_*.so $deploy
+            fi
         fi
     fi
 fi
@@ -322,30 +352,49 @@ elif [ $1 = "linux" ]; then
 fi
 
 #--------------------------------------------------------------------------------------------------
+# FFmpeg
+#--------------------------------------------------------------------------------------------------
+
+if [ $engine = "ffmpeg" ]; then
+
+    if [ $os = "windows" ]; then
+
+        cp "$path"/sk-*.dll $deploy
+
+    elif [ $1 = "macOS" -o $1 = "linux" ]; then
+
+        cp -P "$path"/libsk-* $deploy
+    fi
+fi
+
+#--------------------------------------------------------------------------------------------------
 # VLC
 #--------------------------------------------------------------------------------------------------
 
-if [ $os = "windows" ]; then
+if [ $engine = "vlc" ]; then
 
-    cp -r "$path"/plugins $deploy
+    if [ $os = "windows" ]; then
 
-    cp "$path"/libvlc*.dll $deploy
+        cp -r "$path"/plugins $deploy
 
-elif [ $1 = "macOS" ]; then
+        cp "$path"/libvlc*.dll $deploy
 
-    cp -r "$path"/plugins $deploy
+    elif [ $1 = "macOS" ]; then
 
-    cp "$path"/libvlc*.dylib $deploy
+        cp -r "$path"/plugins $deploy
 
-elif [ $1 = "linux" ]; then
+        cp "$path"/libvlc*.dylib $deploy
 
-    cp -r "$path"/vlc $deploy
+    elif [ $1 = "linux" ]; then
 
-    cp "$path"/libvlc*.so* $deploy
+        cp -r "$path"/vlc $deploy
 
-    if [ -f "$path"/libidn.so* ]; then
+        cp "$path"/libvlc*.so* $deploy
 
-        cp "$path"/libidn.so* $deploy
+        if [ -f "$path"/libidn.so* ]; then
+
+            cp "$path"/libidn.so* $deploy
+        fi
     fi
 fi
 
@@ -401,10 +450,13 @@ elif [ $1 = "macOS" ]; then
     #----------------------------------------------------------------------------------------------
     # VLC
 
-    install_name_tool -change @rpath/libvlccore.dylib \
-                              @loader_path/libvlccore.dylib libvlc.dylib
+    if [ $engine = "vlc" ]; then
 
-    otool -L libvlc.dylib
+        install_name_tool -change @rpath/libvlccore.dylib \
+                                  @loader_path/libvlccore.dylib libvlc.dylib
+
+        otool -L libvlc.dylib
+    fi
 
     #----------------------------------------------------------------------------------------------
     # libtorrent

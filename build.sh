@@ -49,7 +49,7 @@ compiler_win="mingw"
 
 qt="qt6"
 
-vlc="vlc3"
+player="ffmpeg"
 
 #--------------------------------------------------------------------------------------------------
 # Functions
@@ -254,7 +254,7 @@ echo "-------------------"
 
 export QT_SELECT="$qt"
 
-config="CONFIG+=release $vlc"
+config="CONFIG+=release $player"
 
 if [ $compiler = "mingw" ]; then
 

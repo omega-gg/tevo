@@ -75,7 +75,13 @@ include(src/thread/thread.pri)
 include(src/network/network.pri)
 include(src/image/image.pri)
 include(src/media/media.pri)
-include(src/vlc/vlc.pri)
+
+contains(DEFINES, SK_VLC) {
+    include(src/vlc/vlc.pri)
+} else {
+    include(src/ffmpeg/ffmpeg.pri)
+}
+
 include(src/torrent/torrent.pri)
 
 include(src/3rdparty/qtsingleapplication/qtsingleapplication.pri)
@@ -91,13 +97,49 @@ INCLUDEPATH += $$SK/include/SkCore \
                $$SK/include \
                $$_PRO_FILE_PWD_/include/tevo
 
+# NOTE: FFmpeg plays its audio through Qt Multimedia.
+!contains(DEFINES, SK_VLC) {
+    QT += multimedia
+
+    INCLUDEPATH += $$SK/include/ffmpeg
+}
+
 # NOTE android: Required for qandroidextras_p
 android:greaterThan(QT_MAJOR_VERSION, 4) {
     INCLUDEPATH += $$SK/include/$$QTX \
                    $$SK/include/$$QTX/QtCore
 }
 
-win32:LIBS += -L$$SK/lib -llibvlc \
+contains(DEFINES, SK_VLC) {
+
+    ENGINE = -lvlc
+
+    win32:ENGINE = -llibvlc
+
+    vlc4 {
+        ios:LIBS += -framework VLCKit
+    } else {
+        ios:LIBS += -framework MobileVLCKit
+    }
+} else {
+    # NOTE: Our FFmpeg libraries are prefixed with sk beside Qt Multimedia's FFmpeg.
+
+    ENGINE = -lsk-avformat \
+             -lsk-avcodec \
+             -lsk-avfilter \
+             -lsk-avutil \
+             -lsk-swscale \
+             -lsk-swresample
+
+    ios:LIBS += -framework sk-avformat \
+                -framework sk-avcodec \
+                -framework sk-avfilter \
+                -framework sk-avutil \
+                -framework sk-swscale \
+                -framework sk-swresample
+}
+
+win32:LIBS += -L$$SK/lib $$ENGINE \
               -lws2_32
 
 win32:LIBS += -L$$SK/lib -ltorrent \
@@ -106,31 +148,29 @@ win32:LIBS += -L$$SK/lib -ltorrent \
 # Windows dependency for ShellExecuteA
 win32-msvc*:LIBS += shell32.lib
 
-unix:!ios:!android:LIBS += -L$$SK/lib -lvlc \
+unix:!ios:!android:LIBS += -L$$SK/lib $$ENGINE \
                            -L$$SK/lib -ltorrent-rasterbar \
                            -L$$SK/lib -lboost_system
-
-vlc4 {
-    ios:LIBS += -framework VLCKit
-} else {
-    ios:LIBS += -framework MobileVLCKit
-}
 
 # NOTE iOS: MediaPlayer is required for MP* classes.
 ios:LIBS += -framework MediaPlayer
 
-android:LIBS += -L$$ANDROID_LIB -lvlc \
+android:LIBS += -L$$ANDROID_LIB $$ENGINE \
                 -L$$ANDROID_LIB -ltorrent-rasterbar \
                 -L$$ANDROID_LIB -ltry_signal
 
 macx {
     PATH=$${DESTDIR}/$${TARGET}.app/Contents/MacOS
 
+contains(DEFINES, SK_VLC) {
     QMAKE_POST_LINK = install_name_tool -change @rpath/libvlccore.dylib \
                       @loader_path/libvlccore.dylib $${DESTDIR}/libvlc.dylib;
 
     QMAKE_POST_LINK += install_name_tool -change @rpath/libvlc.dylib \
                        @loader_path/libvlc.dylib $$PATH/$${TARGET};
+} else {
+    QMAKE_POST_LINK = install_name_tool -add_rpath @loader_path $$PATH/$${TARGET};
+}
 
     QMAKE_POST_LINK += install_name_tool -change libtorrent-rasterbar.dylib.2.0.11 \
                        @loader_path/libtorrent-rasterbar.dylib $$PATH/$${TARGET};
@@ -138,10 +178,14 @@ macx {
     QMAKE_POST_LINK += install_name_tool -change libboost_system.dylib \
                        @loader_path/libboost_system.dylib $$PATH/$${TARGET};
 
+contains(DEFINES, SK_VLC) {
     QMAKE_POST_LINK += $${QMAKE_COPY} -r $${DESTDIR}/plugins $$PATH;
 
     QMAKE_POST_LINK += $${QMAKE_COPY} $${DESTDIR}/libvlc.dylib     $$PATH;
     QMAKE_POST_LINK += $${QMAKE_COPY} $${DESTDIR}/libvlccore.dylib $$PATH;
+} else {
+    QMAKE_POST_LINK += $${QMAKE_COPY} -P $${DESTDIR}/libsk-* $$PATH;
+}
 }
 
 macx:ICON = dist/icon.icns

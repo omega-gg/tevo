@@ -18,6 +18,8 @@ compiler_win="mingw"
 
 qt="qt6"
 
+player="ffmpeg"
+
 #--------------------------------------------------------------------------------------------------
 # Functions
 #--------------------------------------------------------------------------------------------------
@@ -71,6 +73,13 @@ else
 fi
 
 deploy="$Sky/deploy"
+
+if [ $player = "ffmpeg" -a $qt = "qt6" ]; then
+
+    engine="ffmpeg"
+else
+    engine="vlc"
+fi
 
 #--------------------------------------------------------------------------------------------------
 # Clean
@@ -155,108 +164,88 @@ elif [ $1 = "android" ]; then
 fi
 
 #--------------------------------------------------------------------------------------------------
-# VLC
+# FFmpeg
 #--------------------------------------------------------------------------------------------------
 
-if [ $os = "windows" ]; then
+if [ $engine = "ffmpeg" ]; then
 
-    echo "COPYING VLC"
+    if [ $os = "windows" ]; then
 
-    rm -rf bin/plugins
-    mkdir  bin/plugins
+        echo "COPYING FFmpeg"
 
-    cp -r "$deploy"/plugins bin
+        cp "$deploy"/sk-*.dll bin
 
-    cp "$deploy"/libvlc*.dll bin
+    elif [ $1 = "macOS" -o $1 = "linux" ]; then
 
-elif [ $1 = "macOS" ]; then
+        echo "COPYING FFmpeg"
 
-    echo "COPYING VLC"
+        cp -P "$deploy"/libsk-* bin
 
-    rm -rf bin/plugins
-    mkdir  bin/plugins
+    elif [ $1 = "android" ]; then
 
-    cp -r "$deploy"/plugins bin
+        echo "COPYING FFmpeg"
 
-    cp "$deploy"/libvlc*.dylib bin
-
-elif [ $1 = "linux" ]; then
-
-    echo "COPYING VLC"
-
-    rm -rf bin/vlc
-    mkdir  bin/vlc
-
-    cp -r "$deploy"/vlc bin
-
-    cp "$deploy"/libvlc*.so* bin
-
-    if [ -f "$deploy"/libidn.so* ]; then
-
-        cp "$deploy"/libidn.so* bin
+        copyAndroid "$deploy"/ffmpeg
     fi
-
-elif [ $1 = "android" ]; then
-
-    echo "COPYING VLC"
-
-    copyAndroid "$deploy"/vlc
 fi
 
 #--------------------------------------------------------------------------------------------------
-# libtorrent
+# VLC
 #--------------------------------------------------------------------------------------------------
 
-if [ $os = "windows" ]; then
+if [ $engine = "vlc" ]; then
 
-    echo "COPYING VLC"
+    if [ $os = "windows" ]; then
 
-    rm -rf bin/plugins
-    mkdir  bin/plugins
+        echo "COPYING VLC"
 
-    cp -r "$deploy"/plugins bin
+        rm -rf bin/plugins
+        mkdir  bin/plugins
 
-    cp "$deploy"/libvlc*.dll bin
+        cp -r "$deploy"/plugins bin
 
-elif [ $1 = "macOS" ]; then
+        cp "$deploy"/libvlc*.dll bin
 
-    echo "COPYING VLC"
+    elif [ $1 = "macOS" ]; then
 
-    rm -rf bin/plugins
-    mkdir  bin/plugins
+        echo "COPYING VLC"
 
-    cp -r "$deploy"/plugins bin
+        rm -rf bin/plugins
+        mkdir  bin/plugins
 
-    cp "$deploy"/libvlc*.dylib bin
+        cp -r "$deploy"/plugins bin
 
-elif [ $1 = "linux" ]; then
+        cp "$deploy"/libvlc*.dylib bin
 
-    echo "COPYING VLC"
+    elif [ $1 = "linux" ]; then
 
-    rm -rf bin/vlc
-    mkdir  bin/vlc
+        echo "COPYING VLC"
 
-    cp -r "$deploy"/vlc bin
+        rm -rf bin/vlc
+        mkdir  bin/vlc
 
-    cp "$deploy"/libvlc*.so* bin
+        cp -r "$deploy"/vlc bin
 
-    if [ -f "$deploy"/libidn.so* ]; then
+        cp "$deploy"/libvlc*.so* bin
 
-        cp "$deploy"/libidn.so* bin
+        if [ -f "$deploy"/libidn.so* ]; then
+
+            cp "$deploy"/libidn.so* bin
+        fi
+
+    elif [ $1 = "android" ]; then
+
+        echo "COPYING VLC"
+
+        path="$deploy/vlc"
+
+        copyAndroid "$path"
+
+        cp "$path"/*.jar $data/armeabi-v7a/libs
+        cp "$path"/*.jar $data/arm64-v8a/libs
+        cp "$path"/*.jar $data/x86/libs
+        cp "$path"/*.jar $data/x86_64/libs
     fi
-
-elif [ $1 = "android" ]; then
-
-    echo "COPYING VLC"
-
-    path="$deploy/vlc"
-
-    copyAndroid "$path"
-
-    cp "$path"/*.jar $data/armeabi-v7a/libs
-    cp "$path"/*.jar $data/arm64-v8a/libs
-    cp "$path"/*.jar $data/x86/libs
-    cp "$path"/*.jar $data/x86_64/libs
 fi
 
 #--------------------------------------------------------------------------------------------------

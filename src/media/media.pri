@@ -34,8 +34,6 @@ HEADERS += $$SK_GUI/media/WBackendNet.h \
            $$SK_BACKEND/media/WBackendUniversal_p.h \
            $$SK_MEDIA/media/WBackendManager.h \
            $$SK_MEDIA/media/WBackendManager_p.h \
-           $$SK_MEDIA/media/WBackendVlc.h \
-           $$SK_MEDIA/media/WBackendVlc_p.h \
            $$SK_TORRENT/media/WBackendTorrent.h \
            $$SK_TORRENT/media/WBackendTorrent_p.h \
            $$SK_TORRENT/media/WHookTorrent.h \
@@ -60,6 +58,5 @@ SOURCES += $$SK_GUI/media/WBackendNet.cpp \
            $$SK_GUI/media/WTabsTrack.cpp \
            $$SK_BACKEND/media/WBackendUniversal.cpp \
            $$SK_MEDIA/media/WBackendManager.cpp \
-           $$SK_MEDIA/media/WBackendVlc.cpp \
            $$SK_TORRENT/media/WBackendTorrent.cpp \
            $$SK_TORRENT/media/WHookTorrent.cpp \
