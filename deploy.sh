@@ -418,19 +418,6 @@ elif [ $1 = "linux" ]; then
     cp "$path"/libtorrent-rasterbar*.so* $deploy
 fi
 
-#--------------------------------------------------------------------------------------------------
-# Boost
-#--------------------------------------------------------------------------------------------------
-
-if [ $1 = "macOS" ]; then
-
-    cp "$path"/libboost*.dylib $deploy
-
-elif [ $1 = "linux" ]; then
-
-    cp "$path"/libboost*.so* $deploy
-fi
-
 echo "-------------"
 echo ""
 
@@ -460,14 +447,6 @@ elif [ $1 = "macOS" ]; then
 
         otool -L libvlc.dylib
     fi
-
-    #----------------------------------------------------------------------------------------------
-    # libtorrent
-
-    install_name_tool -change libboost_system.dylib \
-                              @loader_path/libboost_system.dylib libtorrent-rasterbar.dylib
-
-    otool -L libtorrent-rasterbar.dylib
 
     #----------------------------------------------------------------------------------------------
 

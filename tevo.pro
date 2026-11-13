@@ -67,6 +67,9 @@ ios:QMAKE_LFLAGS += -F$$SK/lib
 unix:QMAKE_LFLAGS += "-Wl,-rpath,'\$$ORIGIN'"
 
 include($$SK/src/Sk.pri)
+
+!contains(DEFINES, SK_VLC):DEFINES += SK_NO_MEDIADOWNLOAD
+
 include(src/global/global.pri)
 include(src/controllers/controllers.pri)
 include(src/kernel/kernel.pri)
@@ -142,15 +145,13 @@ contains(DEFINES, SK_VLC) {
 win32:LIBS += -L$$SK/lib $$ENGINE \
               -lws2_32
 
-win32:LIBS += -L$$SK/lib -ltorrent \
-              -L$$SK/lib -lboost_system
+win32:LIBS += -L$$SK/lib -ltorrent
 
 # Windows dependency for ShellExecuteA
 win32-msvc*:LIBS += shell32.lib
 
 unix:!ios:!android:LIBS += -L$$SK/lib $$ENGINE \
-                           -L$$SK/lib -ltorrent-rasterbar \
-                           -L$$SK/lib -lboost_system
+                           -L$$SK/lib -ltorrent-rasterbar
 
 # NOTE iOS: MediaPlayer is required for MP* classes.
 ios:LIBS += -framework MediaPlayer
@@ -172,11 +173,8 @@ contains(DEFINES, SK_VLC) {
     QMAKE_POST_LINK = install_name_tool -add_rpath @loader_path $$PATH/$${TARGET};
 }
 
-    QMAKE_POST_LINK += install_name_tool -change libtorrent-rasterbar.dylib.2.0.11 \
+    QMAKE_POST_LINK += install_name_tool -change libtorrent-rasterbar.dylib.2.1.0 \
                        @loader_path/libtorrent-rasterbar.dylib $$PATH/$${TARGET};
-
-    QMAKE_POST_LINK += install_name_tool -change libboost_system.dylib \
-                       @loader_path/libboost_system.dylib $$PATH/$${TARGET};
 
 contains(DEFINES, SK_VLC) {
     QMAKE_POST_LINK += $${QMAKE_COPY} -r $${DESTDIR}/plugins $$PATH;

@@ -277,21 +277,4 @@ elif [ $1 = "android" ]; then
     copyAndroid "$deploy"/libtorrent
 fi
 
-#--------------------------------------------------------------------------------------------------
-# Boost
-#--------------------------------------------------------------------------------------------------
-
-if [ $1 = "macOS" ]; then
-
-    echo "COPYING Boost"
-
-    cp "$deploy"/libboost*.dylib bin
-
-elif [ $1 = "linux" ]; then
-
-    echo "COPYING Boost"
-
-    cp "$deploy"/libboost*.so* bin
-fi
-
 echo "----------------"

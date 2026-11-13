@@ -51,7 +51,7 @@ jobs:
       sh environment.sh qt5
       sh build.sh macOS all
       cd deploy
-      zip -rq ../tevo.zip *
+      zip -rqy ../tevo.zip *
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-macOS-qt5
 
@@ -63,7 +63,7 @@ jobs:
       sh environment.sh qt6
       sh build.sh macOS all
       cd deploy
-      zip -rq ../tevo.zip *
+      zip -rqy ../tevo.zip *
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-macOS-qt6
 
@@ -84,7 +84,7 @@ jobs:
                                      sh environment.sh qt4;
                                      sh build.sh linux all;
                                      cd deploy;
-                                     zip -rq ../tevo.zip *"
+                                     zip -rqy ../tevo.zip *"
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux32-qt4
 
@@ -101,7 +101,7 @@ jobs:
                                      sh environment.sh qt4;
                                      sh build.sh linux all;
                                      cd deploy;
-                                     zip -rq ../tevo.zip *"
+                                     zip -rqy ../tevo.zip *"
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux64-qt4
 
@@ -120,7 +120,7 @@ jobs:
                                      sh environment.sh qt5;
                                      sh build.sh linux all;
                                      cd deploy;
-                                     zip -rq ../tevo.zip *"
+                                     zip -rqy ../tevo.zip *"
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux32-qt5
 
@@ -132,7 +132,7 @@ jobs:
       sh environment.sh qt5
       sh build.sh linux all
       cd deploy
-      zip -rq ../tevo.zip *
+      zip -rqy ../tevo.zip *
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux64-qt5
 
@@ -151,7 +151,7 @@ jobs:
                                      sh environment.sh qt6;
                                      sh build.sh linux all;
                                      cd deploy;
-                                     zip -rq ../tevo.zip *"
+                                     zip -rqy ../tevo.zip *"
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-linux64-qt6
 
@@ -167,7 +167,7 @@ jobs:
       sh environment.sh qt5
       sh build.sh android all
       cd deploy
-      zip -rq ../tevo.zip *
+      zip -rqy ../tevo.zip *
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-android-qt5
 
@@ -179,6 +179,6 @@ jobs:
       sh environment.sh qt6
       sh build.sh android all
       cd deploy
-      zip -rq ../tevo.zip *
+      zip -rqy ../tevo.zip *
   - publish: $(System.DefaultWorkingDirectory)/tevo.zip
     artifact: tevo-android-qt6
