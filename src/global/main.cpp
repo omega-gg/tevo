@@ -47,7 +47,11 @@ int main(int argc, char * argv[])
 
     if (code == -1)
     {
-        return application->exec();
+        int result = application->exec();
+
+        delete application;
+
+        return result;
     }
     else return code;
 }
